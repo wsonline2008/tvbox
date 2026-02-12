@@ -3,7 +3,7 @@
 
 """
 
-作者 丢丢喵推荐 🚓 内容均从互联网收集而来 仅供交流学习使用 版权归原创者所有 如侵犯了您的权益 请通知作者 将及时删除侵权内容
+作者 丢丢喵 🚓 内容均从互联网收集而来 仅供交流学习使用 版权归原创者所有 如侵犯了您的权益 请通知作者 将及时删除侵权内容
                     ====================Diudiumiao====================
 
 """
@@ -32,7 +32,7 @@ import os
 
 sys.path.append('..')
 
-xurl = "https://djw1.com"
+xurl = "https://www.yymp3.com"
 
 headerx = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36'
@@ -118,24 +118,27 @@ class Spider(Spider):
     def homeContent(self, filter):
         result = {"class": []}
 
-        detail = requests.get(url=xurl + "/all/", headers=headerx)
+        detail = requests.get(url=xurl, headers=headerx)
         detail.encoding = "utf-8"
         res = detail.text
-
         doc = BeautifulSoup(res, "lxml")
 
-        soups = doc.find_all('section', class_="container items")
+        soups = doc.find_all('div', id="nav_box")
 
         for soup in soups:
-            vods = soup.find_all('li')
+            vods = soup.find_all('a')
 
             for vod in vods:
-
-                id = vod.find('a')['href']
-
                 name = vod.text.strip()
+                skip_keywords = ["首页", "动漫"]
+                if any(keyword in name for keyword in skip_keywords):
+                    continue
 
-                result["class"].append({"type_id": id, "type_name": "" + name})
+                id = vod['href']
+                if 'http' not in id:
+                    id = xurl + id
+
+                result["class"].append({"type_id": id, "type_name": name})
 
         return result
 
@@ -146,40 +149,66 @@ class Spider(Spider):
         result = {}
         videos = []
 
-        if pg:
-            page = int(pg)
-        else:
-            page = 1
+        if '@' in cid:
+            fenge = cid.split("@")
 
-        url = f'{cid}page/{str(page)}/'
-        detail = requests.get(url=url, headers=headerx)
-        detail.encoding = "utf-8"
-        res = detail.text
-        doc = BeautifulSoup(res, "lxml")
+            detail = requests.get(url=xurl + fenge[0], headers=headerx)
+            detail.encoding = "utf-8"
+            res = detail.text
+            doc = BeautifulSoup(res, "lxml")
 
-        soups = doc.find_all('section', class_="container items")
+            soups = doc.find_all('dl', class_="albumlist c")
 
-        for soup in soups:
-            vods = soup.find_all('li')
+            for vod in soups:
+                names = vod.find('a', class_="A_name")
+                name = names.text.strip()
 
-            for vod in vods:
-
-                name = vod.find('img')['alt']
-
-                ids = vod.find('a', class_="image-line")
-                id = ids['href']
+                ids = vod.find('dd', class_="A_details")
+                id = ids.find('a')['href']
 
                 pic = vod.find('img')['src']
 
-                remark = self.extract_middle_text(str(vod), 'class="remarks light">', '<', 0)
+                if 'http' not in pic:
+                    pic = "https:" + pic
+
+                remark = "推荐"
 
                 video = {
                     "vod_id": id,
                     "vod_name": name,
                     "vod_pic": pic,
-                    "vod_remarks": '▶️' + remark
+                    "vod_remarks": remark
                         }
                 videos.append(video)
+
+        else:
+            detail = requests.get(url=cid, headers=headerx)
+            detail.encoding = "utf-8"
+            res = detail.text
+            doc = BeautifulSoup(res, "lxml")
+            soups = doc.find_all('ul', class_="Cate_slist c")
+
+            for soup in soups:
+                vods = soup.find_all('a')
+
+                for vod in vods:
+
+                    name = vod.text.strip()
+
+                    id = vod['href']
+
+                    pic = "https://fs-im-kefu.7moor-fs1.com/ly/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/af3a1f95d591c34d/1755975256375.png"
+
+                    remark = "推荐"
+
+                    video = {
+                        "vod_id": id+'@'+name,
+                        "vod_name": name,
+                        "vod_pic": pic,
+                        "vod_tag": "folder",
+                        "vod_remarks": remark
+                            }
+                    videos.append(video)
 
         result = {'list': videos}
         result['page'] = pg
@@ -195,55 +224,70 @@ class Spider(Spider):
         xianlu = ''
         bofang = ''
 
-        if 'http' not in did:
-            did = xurl + did
+        if 'Play' in did:
+            if 'http' not in did:
+                bofang = xurl + did
 
-        res = requests.get(url=did, headers=headerx)
-        res.encoding = "utf-8"
-        res = res.text
-        doc = BeautifulSoup(res, "lxml")
+            xianlu = '搜索专线'
 
-        url = 'https://fs-im-kefu.7moor-fs1.com/ly/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1732707176882/jiduo.txt'
-        response = requests.get(url)
-        response.encoding = 'utf-8'
-        code = response.text
-        name = self.extract_middle_text(code, "s1='", "'", 0)
-        Jumps = self.extract_middle_text(code, "s2='", "'", 0)
+            videos.append({
+                "vod_id": did,
+                "vod_play_from": xianlu,
+                "vod_play_url": bofang
+                         })
 
-        content = '集多为您介绍剧情📢' + self.extract_middle_text(res,'class="info-detail">','<', 0)
-
-        remarks = self.extract_middle_text(res, 'class="info-mark">', '<', 0)
-
-        year = self.extract_middle_text(res, 'class="info-addtime">', '<', 0)
-
-        if name not in content:
-            bofang = Jumps
-            xianlu = '1'
         else:
-            soups = doc.find('div', class_="ep-list-items")
+            if 'http' not in did:
+                did = xurl + did
 
-            soup = soups.find_all('a')
+            res = requests.get(url=did, headers=headerx)
+            res.encoding = "utf-8"
+            res = res.text
+            doc = BeautifulSoup(res, "lxml")
 
-            for sou in soup:
+            content = self.extract_middle_text(res,'style="height:93px;">','</p>', 0)
+            content = content.replace('<br>', '').replace('</br>', '').replace(' ', '')
 
-                id = sou['href']
+            director = self.extract_middle_text(res,'公司：','</', 0)
 
-                name = sou.text.strip()
+            actor = self.extract_middle_text(res, '歌手：', '</li>',1,'href=.*?>(.*?)</a>')
 
-                bofang = bofang + name + '$' + id + '#'
+            year = self.extract_middle_text(res, '时间：', '<', 0)
 
-            bofang = bofang[:-1]
+            area = self.extract_middle_text(res, '语种：', '<', 0)
 
-            xianlu = '专线'
+            soups = doc.find_all('ul', class_="A_list4")
 
-        videos.append({
-            "vod_id": did,
-            "vod_remarks": remarks,
-            "vod_year": year,
-            "vod_content": content,
-            "vod_play_from": xianlu,
-            "vod_play_url": bofang
-                     })
+            for item in soups:
+                vods = item.find_all('li')
+
+                for sou in vods:
+
+                    ids = sou.find('div', class_="td1_l")
+                    id = ids.find('a')['href']
+
+                    if 'http' not in id:
+                        id = xurl + id
+
+                    names = sou.find('div', class_="td1_l")
+                    name = names.text.strip()
+
+                    bofang = bofang + name + '$' + id + '#'
+
+                bofang = bofang[:-1]
+
+                xianlu = '音乐专线'
+
+            videos.append({
+                "vod_id": did,
+                "vod_director": director,
+                "vod_actor": actor,
+                "vod_year": year,
+                "vod_area": area,
+                "vod_content": content,
+                "vod_play_from": xianlu,
+                "vod_play_url": bofang
+                         })
 
         result['list'] = videos
         return result
@@ -254,7 +298,11 @@ class Spider(Spider):
         res.encoding = "utf-8"
         res = res.text
 
-        url = self.extract_middle_text(res, '"wwm3u8":"', '"', 0).replace('\\', '')
+        year = self.extract_middle_text(res, '$song_data[0]', ';', 0)
+        fenge = year.split('|')
+
+        url = "https://ting8.yymp3.com/" + fenge[4]
+        url = url.replace('wma', 'mp3')
 
         result = {}
         result["parse"] = 0
@@ -272,33 +320,38 @@ class Spider(Spider):
         else:
             page = 1
 
-        url = f'{xurl}/search/{key}/page/{str(page)}/'
+        url = f'{xurl}/search/?page={str(page)}&key={key}&tp=1'
         detail = requests.get(url=url, headers=headerx)
         detail.encoding = "utf-8"
         res = detail.text
         doc = BeautifulSoup(res, "lxml")
 
-        soups = doc.find_all('section', class_="container items")
+        soups = doc.find_all('ul', class_="searchResult c")
 
-        for soup in soups:
-            vods = soup.find_all('li')
+        for item in soups:
+            vods = item.find_all('li')
 
-            for vod in vods:
+            for vod in vods[1:]:
 
-                name = vod.find('img')['alt']
+                names = vod.find('div', class_="p3")
+                name1 = names.text.strip()
 
-                ids = vod.find('a', class_="image-line")
-                id = ids['href']
+                name2s = vod.find('div', class_="p2")
+                name2 = name2s.text.strip()
 
-                pic = vod.find('img')['src']
+                name = name1 + ' ' + name2
 
-                remark = self.extract_middle_text(str(vod), 'class="remarks light">', '<', 0)
+                id = names.find('a')['href']
+
+                pic = "https://fs-im-kefu.7moor-fs1.com/ly/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/af3a1f95d591c34d/1755975256375.png"
+
+                remark = "推荐"
 
                 video = {
                     "vod_id": id,
                     "vod_name": name,
                     "vod_pic": pic,
-                    "vod_remarks": '▶️' + remark
+                    "vod_remarks": remark
                         }
                 videos.append(video)
 
@@ -320,6 +373,7 @@ class Spider(Spider):
         elif params['type'] == "ts":
             return self.proxyTs(params)
         return None
+
 
 
 

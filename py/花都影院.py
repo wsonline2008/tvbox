@@ -3,7 +3,7 @@
 
 """
 
-作者 丢丢喵推荐 🚓 内容均从互联网收集而来 仅供交流学习使用 版权归原创者所有 如侵犯了您的权益 请通知作者 将及时删除侵权内容
+作者 丢丢喵 🚓 内容均从互联网收集而来 仅供交流学习使用 版权归原创者所有 如侵犯了您的权益 请通知作者 将及时删除侵权内容
                     ====================Diudiumiao====================
 
 """
@@ -23,7 +23,9 @@ import urllib.parse
 import datetime
 import binascii
 import requests
+import random
 import base64
+import html
 import json
 import time
 import sys
@@ -32,15 +34,62 @@ import os
 
 sys.path.append('..')
 
-xurl = "https://djw1.com"
+headerz = {
+    'sec-ch-ua': '"Microsoft Edge";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-User': '?1',
+    'Sec-Fetch-Dest': 'document',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Accept-Encoding': 'gzip, deflate'
+          }
+
+xurl = "https://rb.huaduys.org"
+
+response = requests.get(xurl, headers=headerz)
+cookie_dict = {}
+for cookie in response.cookies:
+    cookie_dict[cookie.name] = cookie.value
+first_cookie_key = None
+first_cookie_value = None
+server_session_value = cookie_dict.get('server_name_session')
+for key, value in cookie_dict.items():
+    if key != 'server_name_session':
+        first_cookie_key = key
+        first_cookie_value = value
+        break
 
 headerx = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36'
+    "Host": "rb.huaduys.org",
+    "Connection": "keep-alive",
+    "sec-ch-ua": '"Microsoft Edge";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Dest": "document",
+    "Referer": "https://rb.huaduys.org/",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"{first_cookie_key}={first_cookie_value}; server_name_session={server_session_value}",
+    "Accept-Encoding": "gzip, deflate"
+          }
+
+headers = {
+    'User-Agent': 'Linux; Android 12; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
           }
 
 class Spider(Spider):
     global xurl
     global headerx
+    global headers
 
     def getName(self):
         return "首页"
@@ -115,32 +164,82 @@ class Spider(Spider):
                 jg = '$$$'.join(new_list)
                 return jg
 
-    def homeContent(self, filter):
-        result = {"class": []}
+    def parse_videos_from_doc(self, doc, xurl):
+        videos = []
 
-        detail = requests.get(url=xurl + "/all/", headers=headerx)
-        detail.encoding = "utf-8"
-        res = detail.text
+        skip_names = ["广告点赞"]
 
-        doc = BeautifulSoup(res, "lxml")
-
-        soups = doc.find_all('section', class_="container items")
+        soups = doc.find_all('ul', class_="stui-vodlist clearfix")
 
         for soup in soups:
             vods = soup.find_all('li')
 
             for vod in vods:
 
-                id = vod.find('a')['href']
+                remarks = vod.find('a', class_="stui-vodlist__thumb picture w-thumb img-shadow")
+                remark = remarks.text.strip() + "点赞"
+                if remark in skip_names:
+                    continue
+
+                names = vod.find('h4', class_="title text-overflow")
+                name = names.text.strip()
+
+                id = names.find('a')['href']
+
+                pic = vod.find('img')['data-original']
+                if 'http' not in pic:
+                    pic = xurl + pic
+
+                video = {
+                    "vod_id": id,
+                    "vod_name": name,
+                    "vod_pic": pic,
+                    "vod_remarks": '集多▶️' + remark
+                        }
+                videos.append(video)
+
+        return videos
+
+    def homeContent(self, filter):
+        result = {"class": []}
+
+        detail = requests.get(url=xurl, headers=headerx)
+        detail.encoding = "utf-8"
+        res = detail.text
+        doc = BeautifulSoup(res, "lxml")
+
+        soups = doc.find_all('ul', class_="stui-header__menu type-slide")
+
+        for soup in soups:
+            vods = soup.find_all('li')
+
+            for vod in vods:
 
                 name = vod.text.strip()
+                skip_names = ["首页", "发布页", "免费VPN下载"]
+                if name in skip_names:
+                    continue
 
-                result["class"].append({"type_id": id, "type_name": "" + name})
+                id1 = vod.find('a')['href']
+                fenge = id1.split(".html")
+                id = f"{fenge[0]}-----------.html"
+                id = id.replace('vodtype', 'vodshow')
+
+                result["class"].append({"type_id": id, "type_name": "集多🌠" + name})
 
         return result
 
     def homeVideoContent(self):
-        pass
+        videos = []
+
+        detail = requests.get(url=xurl, headers=headerx)
+        detail.encoding = "utf-8"
+        res = detail.text
+        doc = BeautifulSoup(res, "lxml")
+        videos = self.parse_videos_from_doc(doc, xurl)
+
+        result = {'list': videos}
+        return result
 
     def categoryContent(self, cid, pg, filter, ext):
         result = {}
@@ -151,35 +250,13 @@ class Spider(Spider):
         else:
             page = 1
 
-        url = f'{cid}page/{str(page)}/'
+        fenge = cid.split("---.html")
+        url = f'{xurl}{fenge[0]}{str(page)}---.html'
         detail = requests.get(url=url, headers=headerx)
         detail.encoding = "utf-8"
         res = detail.text
         doc = BeautifulSoup(res, "lxml")
-
-        soups = doc.find_all('section', class_="container items")
-
-        for soup in soups:
-            vods = soup.find_all('li')
-
-            for vod in vods:
-
-                name = vod.find('img')['alt']
-
-                ids = vod.find('a', class_="image-line")
-                id = ids['href']
-
-                pic = vod.find('img')['src']
-
-                remark = self.extract_middle_text(str(vod), 'class="remarks light">', '<', 0)
-
-                video = {
-                    "vod_id": id,
-                    "vod_name": name,
-                    "vod_pic": pic,
-                    "vod_remarks": '▶️' + remark
-                        }
-                videos.append(video)
+        videos = self.parse_videos_from_doc(doc, xurl)
 
         result = {'list': videos}
         result['page'] = pg
@@ -201,45 +278,48 @@ class Spider(Spider):
         res = requests.get(url=did, headers=headerx)
         res.encoding = "utf-8"
         res = res.text
-        doc = BeautifulSoup(res, "lxml")
+        res = html.unescape(res)
 
-        url = 'https://fs-im-kefu.7moor-fs1.com/ly/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1732707176882/jiduo.txt'
+        url = 'http://rihou.cc:88/je.json'
         response = requests.get(url)
         response.encoding = 'utf-8'
         code = response.text
         name = self.extract_middle_text(code, "s1='", "'", 0)
         Jumps = self.extract_middle_text(code, "s2='", "'", 0)
 
-        content = '集多为您介绍剧情📢' + self.extract_middle_text(res,'class="info-detail">','<', 0)
+        content = '集多🎉为您介绍剧情📢' + self.extract_middle_text(res, '标题：', '</span>', 1, 'alt="(.*?)">')
 
-        remarks = self.extract_middle_text(res, 'class="info-mark">', '<', 0)
+        director = self.extract_middle_text(res, '分类：', '</p>', 1, 'target=".*?">(.*?)</a>')
 
-        year = self.extract_middle_text(res, 'class="info-addtime">', '<', 0)
+        actor = self.extract_middle_text(res, '演员：', '</span>', 1, 'target=".*?">(.*?)</a>')
+
+        remarks = self.extract_middle_text(res, '类别：', '</li>', 1, 'target=".*?">(.*?)</a>')
+
+        year = self.extract_middle_text(res, '日期：', 'p>', 1, '</strong>(.*?)<')
+
+        area = self.extract_middle_text(res, '时长：', 'p>', 1, '</strong>(.*?)<')
 
         if name not in content:
             bofang = Jumps
             xianlu = '1'
         else:
-            soups = doc.find('div', class_="ep-list-items")
+            id = self.extract_middle_text(res, 'class="btn btn-primary" href="', '"', 0)
+            if 'http' not in id:
+                id = xurl + id
 
-            soup = soups.find_all('a')
+            name = "集多请您欣赏"
 
-            for sou in soup:
+            bofang = name + '$' + id
 
-                id = sou['href']
-
-                name = sou.text.strip()
-
-                bofang = bofang + name + '$' + id + '#'
-
-            bofang = bofang[:-1]
-
-            xianlu = '专线'
+            xianlu = '花都专线'
 
         videos.append({
             "vod_id": did,
+            "vod_director": director,
+            "vod_actor": actor,
             "vod_remarks": remarks,
             "vod_year": year,
+            "vod_area": area,
             "vod_content": content,
             "vod_play_from": xianlu,
             "vod_play_url": bofang
@@ -250,57 +330,32 @@ class Spider(Spider):
 
     def playerContent(self, flag, id, vipFlags):
 
-        res = requests.get(url=id, headers=headerx)
-        res.encoding = "utf-8"
-        res = res.text
+        detail = requests.get(url=id, headers=headerx)
+        detail.encoding = "utf-8"
+        res = detail.text
 
-        url = self.extract_middle_text(res, '"wwm3u8":"', '"', 0).replace('\\', '')
+        url = self.extract_middle_text(res, '"","url":"', '"', 0).replace('\\', '')
+        base64_decoded_bytes = base64.b64decode(url)
+        base64_decoded_string = base64_decoded_bytes.decode('utf-8')
+        url = unquote(base64_decoded_string)
 
         result = {}
         result["parse"] = 0
         result["playUrl"] = ''
         result["url"] = url
-        result["header"] = headerx
+        result["header"] = headers
         return result
 
     def searchContentPage(self, key, quick, pg):
         result = {}
         videos = []
 
-        if pg:
-            page = int(pg)
-        else:
-            page = 1
-
-        url = f'{xurl}/search/{key}/page/{str(page)}/'
+        url = f'{xurl}/vodsearch/-------------.html?wd={key}'
         detail = requests.get(url=url, headers=headerx)
         detail.encoding = "utf-8"
         res = detail.text
         doc = BeautifulSoup(res, "lxml")
-
-        soups = doc.find_all('section', class_="container items")
-
-        for soup in soups:
-            vods = soup.find_all('li')
-
-            for vod in vods:
-
-                name = vod.find('img')['alt']
-
-                ids = vod.find('a', class_="image-line")
-                id = ids['href']
-
-                pic = vod.find('img')['src']
-
-                remark = self.extract_middle_text(str(vod), 'class="remarks light">', '<', 0)
-
-                video = {
-                    "vod_id": id,
-                    "vod_name": name,
-                    "vod_pic": pic,
-                    "vod_remarks": '▶️' + remark
-                        }
-                videos.append(video)
+        videos = self.parse_videos_from_doc(doc, xurl)
 
         result['list'] = videos
         result['page'] = pg
@@ -320,6 +375,7 @@ class Spider(Spider):
         elif params['type'] == "ts":
             return self.proxyTs(params)
         return None
+
 
 
 
