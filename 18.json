@@ -6,6 +6,9 @@
   "wallpaper": "https://qist.cc/api/api.php",
   "sites": [
     {"key": "drpy_js_豆瓣","name": "搜索 | 豆瓣[js]","type": 3,"api": "./lib/drpy2.min.js","ext": "./js/drpy.js","searchable": 1,"quickSearch": 0,"changeable": 0},
+    {"key": "配置中心","name": "配置｜中心","type": 3,"api": "csp_Config","searchable": 0,"changeable": 0,"indexs": 0,"style": {"type": "rect","ratio": 1.597}},
+    {"key": "本地","name": "本地｜视频","type": 3,"api": "csp_LocalFile"},
+    {"key": "预告","name": "新片｜预告","type": 3,"api": "csp_YGP","searchable": 0},
 {"key": "139fm多分类","name": "139fm多分类","type": 3,"api": "./py/139fm多分类.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "18","name": "18","type": 3,"api": "./py/18.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "456movie","name": "456movie","type": 3,"api": "./py/456movie.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
