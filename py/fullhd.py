@@ -11,7 +11,7 @@ from Crypto.Util.Padding import unpad
 import binascii
 
 sys.path.append('..')
-
+#https://www.fullhd.xxx/zh/
 xurl = "https://www.fullhd.to/zh/"
 
 headerx = {
@@ -149,15 +149,20 @@ class Spider(Spider):
 
                     # 获取图片 - 适配两种不同的img标签结构
                     pic = ""
-                    # 第一种方式：查找带有data-src属性的img标签
-                    pics = vod.find('img', class_="lazyload")
-                    if pics and pics.get('data-src'):
-                        pic = pics['data-src']
-                    # 第二种方式：查找带有src属性的img标签
-                    if not pic:
-                        pics = vod.find('img', class_="thumb_img")
-                        if pics and pics.get('src'):
-                            pic = pics['src']
+# 方式1：找包含lazyload的img（适配多class：thumb lazyload）
+pics = vod.find('img', class_=lambda c: c and 'lazyload' in c.split())
+if pics:
+    data_src = pics.get('data-src', '').strip()
+    if data_src:
+        pic = data_src
+
+# 方式2：上面没拿到，再找thumb_img拿src
+if not pic:
+    pics = vod.find('img', class_="thumb_img")
+    if pics:
+        src = pics.get('src', '').strip()
+        if src:
+            pic = src
                     
                     # 如果找到了图片但URL不完整，添加基础URL
                     if pic and 'http' not in pic:
@@ -206,15 +211,20 @@ class Spider(Spider):
 
                     # 获取图片 - 适配两种不同的img标签结构
                     pic = ""
-                    # 第一种方式：查找带有data-src属性的img标签
-                    pics = vod.find('img', class_="lazyload")
-                    if pics and pics.get('data-src'):
-                        pic = pics['data-src']
-                    # 第二种方式：查找带有src属性的img标签
-                    if not pic:
-                        pics = vod.find('img', class_="thumb_img")
-                        if pics and pics.get('src'):
-                            pic = pics['src']
+# 方式1：找包含lazyload的img（适配多class：thumb lazyload）
+pics = vod.find('img', class_=lambda c: c and 'lazyload' in c.split())
+if pics:
+    data_src = pics.get('data-src', '').strip()
+    if data_src:
+        pic = data_src
+
+# 方式2：上面没拿到，再找thumb_img拿src
+if not pic:
+    pics = vod.find('img', class_="thumb_img")
+    if pics:
+        src = pics.get('src', '').strip()
+        if src:
+            pic = src
                     
                     # 如果找到了图片但URL不完整，添加基础URL
                     if pic and 'http' not in pic:
@@ -330,15 +340,20 @@ class Spider(Spider):
 
                     # 获取图片 - 适配两种不同的img标签结构
                     pic = ""
-                    # 第一种方式：查找带有data-src属性的img标签
-                    pics = vod.find('img', class_="lazyload")
-                    if pics and pics.get('data-src'):
-                        pic = pics['data-src']
-                    # 第二种方式：查找带有src属性的img标签
-                    if not pic:
-                        pics = vod.find('img', class_="thumb_img")
-                        if pics and pics.get('src'):
-                            pic = pics['src']
+# 方式1：找包含lazyload的img（适配多class：thumb lazyload）
+pics = vod.find('img', class_=lambda c: c and 'lazyload' in c.split())
+if pics:
+    data_src = pics.get('data-src', '').strip()
+    if data_src:
+        pic = data_src
+
+# 方式2：上面没拿到，再找thumb_img拿src
+if not pic:
+    pics = vod.find('img', class_="thumb_img")
+    if pics:
+        src = pics.get('src', '').strip()
+        if src:
+            pic = src
                     
                     # 如果找到了图片但URL不完整，添加基础URL
                     if pic and 'http' not in pic:
