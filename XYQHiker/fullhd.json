@@ -1,7 +1,7 @@
 {
     "规则名": "fullhd",
     "规则作者": "",
-    "请求头参数": "MOBILE_UA",
+    "请求头参数": "User-Agent$Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "网页编码格式": "UTF-8",
     "图片是否需要代理": "否",
     "是否开启获取首页数据": "是",
