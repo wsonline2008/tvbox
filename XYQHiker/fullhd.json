@@ -11,35 +11,9 @@
     "首页片单链接": "a.thumb_img&&href",
     "首页片单图片": "img&&data-src",
     "首页片单副标题": "span.duration&&text()",
-    "首页片单链接加前缀": "https://www.fullhd.to/zh",
     "首页片单是否Jsoup写法": "1",
-    "分类起始页码": "1",
-"分类配置": {
-    "分类导航页面": "https://www.fullhd.to/zh/categories/",
-    "分类数组规则": "a.item",
-    "分类名称": "@title",
-    "分类id": "@href",
-    "分类链接模板": "https://www.fullhd.to/zh/categories/{cateId}/{catePg}/",
-    "分类分页后缀": "/{catePg}/"
-},
-"分类列表数组规则": "//div[@class='item']/a",
-"分类标题": "@title",
-"分类图片": "img&&data-src",
-"分类备注": "span.info&&text()",
-"分类详情链接": "@href",
-"分类详情链接前缀": "https://www.fullhd.to/zh",
-
-"搜索链接": "https://www.fullhd.to/zh/search/{wd}",
-"搜索分页后缀": "/{pg}/",
-"搜索数组规则": "//div[@class='item']/a",
-"搜索标题": "@title",
-"搜索图片": "img&&data-src",
-"搜索详情链接": "@href",
-"搜索详情链接前缀": "https://www.fullhd.to/zh",
-
 "详情链接": "$url",
 "详情数组规则": "//video//source",
 "播放地址": "@src",
-"播放链接前缀": "https://www.fullhd.to/zh",
 
 }
