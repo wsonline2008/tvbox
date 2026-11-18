@@ -1,0 +1,31 @@
+name: fullhd
+type: 3
+# 分类列表
+filter: {
+  "url":"https://www.fullhd.to/zh/categories/",
+  "xpath":"//a[@class='item']",
+  "name":"normalize-space(@title)",
+  "value":"normalize-space(@href)"
+}
+# 分页规则：filter选中分类后，自动拼接分页
+page0: $url
+page: $url{pg}/
+page_start: 2
+url: $page
+
+list: {
+  "title":"//div[@class='item']/a/@title",
+  "remark":"//div[@class='item']//span/text()",
+  "img":"//div[@class='item']//img[contains(@class,'lazyload')]/@data-src",
+  "img_ext":"//div[@class='item']//img[@class='thumb_img']/@src",
+  "url":"//div[@class='item']/a/@href"
+}
+detail: {
+  "play":"//video//source/@src"
+}
+search: {
+  "url":"https://www.fullhd.to/zh/search/{wd}",
+  "page": "/{pg}",
+  "page_start": 2
+}
+baseUrl: https://www.fullhd.to/zh/
