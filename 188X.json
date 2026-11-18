@@ -36,6 +36,7 @@
 {"key": "葡萄5区","name": "葡萄5区","type": 3,"api": "./py/葡萄5区.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "锦鲤短剧","name": "锦鲤短剧","type": 3,"api": "./py/锦鲤短剧.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "韩国BJ","name": "韩国BJ","type": 3,"api": "./py/韩国BJ.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
+{"key": "FHD","name": "FHD","type": 3,"api": "./py/fullhd.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "香蕉视频","name": "香蕉视频","type": 3,"api": "./py/香蕉视频.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
     {"key": "push_agent","name": "手机｜推送","type": 3,"api": "csp_Push","searchable": 0,"filterable": 0,"changeable": 0},
     {"key": "bb","name": "配置接口完全免费","type": 3,"api": "./lib/drpy2.min.js","ext": "./js/drpy.js"},
