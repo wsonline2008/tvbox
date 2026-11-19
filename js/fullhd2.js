@@ -18,6 +18,6 @@ var rule = {
     limit:5,
     play_parse:false,
     一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
-    二级:'*',
+    二级:';;;;;video;source&&label;source&&src',
     搜索:'a.thumb_img;title;img&&src;span.duration&&Text;href',
 }
