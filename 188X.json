@@ -38,7 +38,7 @@
 {"key": "韩国BJ","name": "韩国BJ","type": 3,"api": "./py/韩国BJ.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "csp_XYQHiker_玩偶哥哥","name":"玩偶哥哥(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/玩偶哥哥.json"},
 {"key": "csp_XYQHiker_兔小贝","name":"兔小贝(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/兔小贝.json"},
-{"key": "csp_XYQHiker_fullhd","name":"fullhd5(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/fullhd.json"},
+{"key": "csp_XYQHiker_fullhd","name":"fullhd6(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/fullhd.json"},
 {"key": "csp_XYQHiker_播视童趣","name":"播视童趣(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/播视童趣.json"},
 {"key": "csp_XYQHiker_有声小说吧","name":"有声小说吧(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/有声小说吧.json"},
 {"key": "csp_XYQHiker_DJ呦呦音乐网","name":"🎧DJ呦呦音乐网(XYQH)","type":3,"api":"csp_XYQHiker","searchable":1,"quickSearch":1,"filterable":1,"ext":"./XYQHiker/DJ呦呦音乐网.json"},
