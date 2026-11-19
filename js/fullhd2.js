@@ -36,11 +36,11 @@ if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
         title = mTitle[1];
     }
     // data‑src 图片
-    //let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
+    let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
     let imgSrc = "";
-    //if(mImg){
-    //    imgSrc = mImg[1];
-    //}
+    if(mImg){
+        imgSrc = mImg[1];
+    }
     // duration
     //let mDur = aBlock.match(/<span\s+class="duration">([\s\S]*?)<\/span>/);
     let dur = "";
