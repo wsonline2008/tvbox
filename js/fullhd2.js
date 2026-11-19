@@ -2,7 +2,7 @@ var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to',
     homeUrl:'/zh',
-    url:'/fyclass/fypage',
+    url:'/fyclass/',
     searchUrl:'/search/**',
     searchable:2,
     headers:{
@@ -51,9 +51,9 @@ while(true){
                 let ePos = href.indexOf("/", idStart);
                 if(ePos !== -1){
                     objId = href.substring(idStart, ePos);
-                    if(objId.length >= 3){
-                        objId = objId.substring(0, objId.length - 3);
-                    }
+                    //if(objId.length >= 3){
+                    //    objId = objId.substring(0, objId.length - 3);
+                    //}
                 }
             }
             // ⚠️务必替换为站点真实图片URL模板
@@ -65,12 +65,7 @@ while(true){
         let mDur = aBlock.match(/<span class="duration">(。*)span>/);
         let dur = "";
         if(mDur){
-            let dkey = "Full Video";
-            let dsPos = mDur[1].indexOf(dkey);
-            if(dsPos == -1){
-                dsPos=0;
-            }
-            dur = mDur[1].substring(dsPos, mDur[1].length - 2);
+            dur = mDur[1].substring(1, mDur[1].length - 2);
         }
         arr.push({
             vod_name: title,
