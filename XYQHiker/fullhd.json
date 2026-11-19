@@ -17,6 +17,14 @@
     "直接播放链接加前缀": "",
     "直接播放链接加后缀": "",
     "直接播放直链视频请求头": "",
+    "分类配置": {
+        "分类导航页面": "https://www.fullhd.to/zh/categories/",
+        "分类数组规则": "a.item",
+        "分类名称": "title",
+        "分类id": "href",
+        "分类链接模板": "https://www.fullhd.to/zh/categories/{cateId}/{catePg}/",
+        "分类分页后缀": "/{catePg}/"
+    },
     "是否开启手动嗅探": "否",
     "手动嗅探视频链接关键词": ".mp4#.m3u8#.flv#video/tos",
     "手动嗅探视频链接过滤词": ".html#=http"
