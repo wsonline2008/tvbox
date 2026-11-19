@@ -19,14 +19,15 @@ let htmlText = getHtml(MY_URL);
 let arr = [];
 
 let posA = htmlText.indexOf('class="thumb_img"');
-let testStr = "posA=" + posA;
-// 只增加一次 substring，不做循环、不写 function、不写 exec
 let cutStr = htmlText.substring(posA, posA + 100);
+// 只用一次简单 match，先不进入循环
+let m = cutStr.match(/title="([^"]+)"/);
+let title = m ? m[1] : "空";
 
 arr.push({
-    vod_name:"阶段2测试",
-    vod_remarks: testStr + " | cutStr=" + cutStr,
-    vod_id:"#s2"
+    vod_name:"阶段3测试",
+    vod_remarks:"title=" + title,
+    vod_id:"#s3"
 });
 VODS = arr;
 `,
