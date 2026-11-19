@@ -42,11 +42,11 @@ if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
     //    imgSrc = mImg[1];
     //}
     // duration
-    let mDur = aBlock.match(/<span\s+class="duration">([\s\S]*?)<\/span>/);
+    //let mDur = aBlock.match(/<span\s+class="duration">([\s\S]*?)<\/span>/);
     let dur = "";
-    if(mDur){
-        dur = mDur[1];
-    }
+    //if(mDur){
+    //    dur = mDur[1];
+    //}
     arr.push({
         vod_name: title,
         vod_pic: imgSrc,
