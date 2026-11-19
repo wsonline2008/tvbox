@@ -2,7 +2,7 @@ var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to/zh',
     //homeUrl:'/zh',
-    url:'[/fyclass/]fyclass/fypage',
+    url:'/fyclass/fypage',
     searchUrl:'/search/**',
     searchable:2,
     headers:{
@@ -13,13 +13,13 @@ var rule = {
     class_name:'最新&最佳&热门',
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
-    推荐:'a.thumb_img;title;img&&src;span.duration&&Text;href',
+    推荐:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
     double:false,
     limit:50,
     play_parse:false,
     //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
     一级:`js:
-    let htmlText = getHtml(input);
+    let htmlText = getHtml(MY_URL);
     let $ = html(htmlText);
 let arr=[];
 $("a.thumb_img").each((i,el)=>{
@@ -39,8 +39,20 @@ $("a.thumb_img").each((i,el)=>{
 
 
     //二级:';;;;;video;source&&label;source&&src',
+    //二级:{
+    //    title: "1",          // 片名选择器
+    //    img: "",       // 详情页封面
+    //    desc: "类型",
+    //    content:"简介",     // 简介
+    //    tabs:"body",       // 线路/标签外层容器
+    //    lists:"video",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+    //    tab_text:"线路",      // 线路名称文本提取
+    //    list_text:"source&&label",       // 单集的集数名称
+    //    list_url:"source&&src",         // 单集播放链接
+    //    重定向:""             // 拿到详情html之后执行js，可以返回新html
+    //},
 二级:`js:
-let htmlText = getHtml(input);
+let htmlText = getHtml(MY_URL);
 let $ = html(htmlText);
 let sourceArr = [];
 
@@ -72,5 +84,5 @@ VOD = {
 };
 console.log("反向后的选集列表：", playListStr);
 `,
-    搜索:'a.thumb_img;title;img&&src;span.duration&&Text;href',
+    搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
