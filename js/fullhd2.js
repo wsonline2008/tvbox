@@ -20,10 +20,11 @@ let arr = [];
 
 let posThumb = htmlText.indexOf('class="thumb_img"');
 let posAStart = htmlText.lastIndexOf('<a ', posThumb);
+let posAEnd = htmlText.indexOf('</a >', posThumb);
 
 arr.push({
-    vod_name:"lastIndexOf测试",
-    vod_remarks:"posThumb=" + posThumb + " | posAStart=" + posAStart,
+    vod_name:"起止位置测试",
+    vod_remarks:"posThumb=" + posThumb + " | posAStart=" + posAStart + " | posAEnd=" + posAEnd,
     vod_id:"#test"
 });
 VODS = arr;
