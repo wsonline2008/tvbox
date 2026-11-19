@@ -1,14 +1,13 @@
 {
     "规则名": "fullhd",
     "规则作者": "",
-    "请求头参数": "User-Agent$Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "请求头参数": "User-Agent$Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36",
     "网页编码格式": "UTF-8",
     "图片是否需要代理": "否",
     "是否开启获取首页数据": "是",
     "首页推荐链接": "https://www.fullhd.to/zh",
     "首页片单列表数组规则": "body&&div.item",
     "首页片单标题": "a.thumb_img&&title",
-    "首页片单链接": "a.thumb_img&&href",
-    "首页片单是否Jsoup写法": "1",
+    "首页片单是否Jsoup写法": "0",
 
 }
