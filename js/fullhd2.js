@@ -39,7 +39,7 @@ $("a.thumb_img").each((i,el)=>{
     二级:{
         title: "",          // 片名选择器
         img: "",       // 详情页封面
-        desc: "类型:span.type&&Text;年份:span.year&&Text;地区:span.area&&Text;更新:span.update&&Text",
+        desc: "类型",
         content:".intro&&Text",     // 简介
         tabs:"",       // 线路/标签外层容器
         lists:"",   // 每一条线路对应的选集容器，#id会自动替换线路下标
