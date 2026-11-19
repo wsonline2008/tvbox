@@ -17,16 +17,41 @@ var rule = {
 推荐:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
-//单独测试exec，用一条极简单正则，不搞[\s\S]*?这种复杂东西
-let regTest = /title\s*=\s*["']([^"']+)["']/;
-let testStr = `<a title="影片ABC"></a>`;
-let ret = regTest.exec(testStr);
-let debugText = "exec返回=" + (ret ? "成功,捕获="+ret[1] : "返回null");
+
+// ========== 写一个提取函数，纯indexOf截取，无exec ==========
+function getAttr(sourceStr, attrName){
+    let findStr = attrName + '="';
+    let startPos = sourceStr.indexOf(findStr);
+    if(startPos === -1) return "";
+    startPos = startPos + findStr.length;
+    let endPos = sourceStr.indexOf('"', startPos);
+    if(endPos === -1) return "";
+    return sourceStr.substring(startPos, endPos);
+}
+
+// 先用你提供的真实HTML片段做定位测试
+let testBlock = `<a href="https://www.Baidu.com" target="_blank" title="Obelut"  class="thumb_img">
+							<div class="img thumb__img" data-preview="https://cast.fullhd.to/preview/93823197.mp4">
+																											                                        																			                                    <img  loading="lazy" class="thumb thumb_img lazyload" fetchpriority="high" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://img.baidu.to/93823000/93823197/medium@2x/1.jpg" alt="Obedient Slut" width="744" height="420"/>
+                                
+								<span class="js-favourites thumb-favourites" data-action="" data-type="video" data-object_id="93823197">
+									<svg class="icon icon-heart-plus"><use xlink:href="#icon-heart-plus"></use></svg>
+									<svg class="icon icon-trashcan"><use xlink:href="#icon-trashcan"></use></svg>
+								</span>
+
+																																	
+																<span class="duration">完整视频 48:47</span>
+							</div>
+						</a >`;
+
+// 先测试从真实HTML片段提取 href 和 title
+let testHref = getAttr(testBlock,"href");
+let testTitle = getAttr(testBlock,"title");
 
 arr.push({
-    vod_name:"exec功能测试",
-    vod_remarks: debugText,
-    vod_id:"#exec_test"
+    vod_name:"✅真实HTML片段定位测试",
+    vod_remarks:"测试href:" + testHref + " | 测试title:" + testTitle,
+    vod_id:"#test_ok"
 });
 VODS = arr;
 `,
