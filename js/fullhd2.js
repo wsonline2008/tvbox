@@ -19,7 +19,7 @@ var rule = {
     play_parse:false,
     //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
     一级:`js:
-    let htmlText = getHtml(host+url);
+    let htmlText = getHtml(input);
     let $ = html(htmlText);
 let arr=[];
 $("a.thumb_img").each((i,el)=>{
@@ -39,17 +39,38 @@ $("a.thumb_img").each((i,el)=>{
 
 
     //二级:';;;;;video;source&&label;source&&src',
-    二级:{
-        title: "1",          // 片名选择器
-        img: "",       // 详情页封面
-        desc: "类型",
-        content:"简介",     // 简介
-        tabs:"body",       // 线路/标签外层容器
-        lists:"video",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-        tab_text:"线路",      // 线路名称文本提取
-        list_text:"source&&label",       // 单集的集数名称
-        list_url:"source&&src",         // 单集播放链接
-        重定向:""             // 拿到详情html之后执行js，可以返回新html
-    },
+二级:`js:
+let htmlText = getHtml(input);
+let $ = html(htmlText);
+let sourceArr = [];
+
+// 取出video下面全部source标签
+$("video source").each((i, el)=>{
+    let src = $(el).attr("src") || "";
+    let label = $(el).attr("label") || "";
+    if(src){ // 过滤空地址
+        sourceArr.push({
+            text: label,
+            url: src
+        })
+    }
+});
+// =========核心：数组反向排序=========
+sourceArr.reverse();
+// 拼接成格式：集名$播放地址#集名$播放地址
+let playListStr = sourceArr.map(item=>{
+    return item.text + "$" + item.url;
+}).join("#");
+
+VOD = {
+    vod_name: "",       //片名按需填写，留空就""
+    vod_pic: "",        //封面，按需从页面抓取
+    vod_remarks: "",
+    vod_content: "从video-source抓取，已经反向排序",
+    vod_play_from: "默认线路",  //线路名称，多条线路可以继续扩展
+    vod_play_url: playListStr
+};
+console.log("反向后的选集列表：", playListStr);
+`,
     搜索:'a.thumb_img;title;img&&src;span.duration&&Text;href',
 }
