@@ -23,15 +23,34 @@ let posAEnd = htmlText.indexOf('</a>', posThumb);
 
 if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
     let aBlock = htmlText.substring(posAStart, posAEnd + 4);
-    // ✅只增加 href match提取，其他字段暂时不加！！
+    // href
     let mHref = aBlock.match(/href\s*=\s*["']([^"']+)["']/);
     let href = "";
     if(mHref){
         href = mHref[1];
     }
+    // title
+    let mTitle = aBlock.match(/title\s*=\s*["']([^"']+)["']/);
+    let title = "无标题";
+    if(mTitle){
+        title = mTitle[1];
+    }
+    // data‑src 图片
+    let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
+    let imgSrc = "";
+    if(mImg){
+        imgSrc = mImg[1];
+    }
+    // duration
+    let mDur = aBlock.match(/<span\s+class="duration">([\s\S]*?)<\/span>/);
+    let dur = "";
+    if(mDur){
+        dur = mDur[1];
+    }
     arr.push({
-        vod_name:"测试提取href",
-        vod_remarks:"href=" + href,
+        vod_name: title,
+        vod_pic: imgSrc,
+        vod_remarks: dur,
         vod_id:href
     });
 }
