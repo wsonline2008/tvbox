@@ -17,13 +17,10 @@
     "直接播放链接加前缀": "",
     "直接播放链接加后缀": "",
     "直接播放直链视频请求头": "",
-    "分类配置": {
-        "分类导航页面": "https://www.fullhd.to/zh/categories/",
-        "分类数组规则": "a.item",
-        "分类名称": "title",
-        "分类链接": "href",
-        "分类分页后缀": "/{catePg}/"
-    },
+    "分类起始页码": "1",
+    "分类链接": "https://www.fullhd.to/zh/{cateId}/{catePg}/",
+    "分类名称": "最新视频&最佳视频&热门影片&Brazzers&Tushy&Naughtyamerica&Sexmex&Passion-HD&Animation&18&Pawg&Thong&Stockings&JAV&Pantyhose",
+    "分类名称替换词": "latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose",
     "详情是否Jsoup写法": "是",
     "类型详情": "",
     "年代详情": "",
