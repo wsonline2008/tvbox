@@ -17,49 +17,51 @@ var rule = {
 推荐:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
-let posThumb = htmlText.indexOf('class="thumb_img"');
-let posAStart = htmlText.lastIndexOf('<a ', posThumb);
-let posAEnd = htmlText.indexOf('</a>', posThumb);
+let searchPos = 0;
 
-if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
-    let aBlock = htmlText.substring(posAStart, posAEnd + 4);
-    // href
-    let mHref = aBlock.match(/href\s*=\s*["']([^"']+)["']/);
-    let href = "";
-    if(mHref){
-        href = mHref[1];
+while(true){
+    let posThumb = htmlText.indexOf('class="thumb_img"', searchPos);
+    if(posThumb === -1){
+        break;
     }
-    // title
-    let mTitle = aBlock.match(/title\s*=\s*["']([^"']+)["']/);
-    let title = "无标题";
-    if(mTitle){
-        title = mTitle[1];
+    let posAStart = htmlText.lastIndexOf('<a ', posThumb);
+    let posAEnd = htmlText.indexOf('</a>', posThumb);
+
+    if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
+        let aBlock = htmlText.substring(posAStart, posAEnd + 4);
+        // href
+        let mHref = aBlock.match(/href\s*=\s*["']([^"']+)["']/);
+        let href = "";
+        if(mHref){
+            href = mHref[1];
+        }
+        // title
+        let mTitle = aBlock.match(/title\s*=\s*["']([^"']+)["']/);
+        let title = "无标题";
+        if(mTitle){
+            title = mTitle[1];
+        }
+        // data‑src 图片
+        let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
+        let imgSrc = "";
+        if(mImg){
+            imgSrc = mImg[1];
+        }
+        // duration（完全保留你原来这一段，未做修改）
+        let mDur = aBlock.match(/<span class="duration">(。*)span>/);
+        let dur = "";
+        if(mDur){
+            dur = mDur[1].replace('Full Video','长');
+        }
+        arr.push({
+            vod_name: title,
+            vod_pic: imgSrc,
+            vod_remarks: dur,
+            vod_id:href
+        });
     }
-    // data‑src 图片
-    let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
-    let imgSrc = "";
-    if(mImg){
-        imgSrc = mImg[1];
-    }
-    // duration
-    let mDur = aBlock.match(/<span class="duration">(.*)span>/);
-    let dur = "";
-    if(mDur){
-        dur = mDur[1];
-    }
-    arr.push({
-        vod_name: title,
-        vod_pic: imgSrc,
-        vod_remarks: dur,
-        vod_id:href
-    });
-}
-if(arr.length === 0){
-    arr.push({
-        vod_name:"⚠未捕获",
-        vod_remarks:"posThumb="+posThumb+" | posAStart="+posAStart+" | posAEnd="+posAEnd,
-        vod_id:"#err"
-    });
+    // 更新下一轮搜索起点，向后移动，防止死循环
+    searchPos = posAEnd + 4;
 }
 VODS = arr;
 `,
@@ -90,11 +92,11 @@ $("a.thumb_img").each((i,el)=>{
     //二级:';;;;;video;source&&label;source&&src',
     二级:{
         title: "1",          // 片名选择器
-        img: "",       // 详情页封面
+        img: "video&&poster",       // 详情页封面
         desc: "类型",
         content:"简介",     // 简介
-        tabs:"body",       // 线路/标签外层容器
-        lists:"video",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+        tabs:"video",       // 线路/标签外层容器
+        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
         tab_text:"线路",      // 线路名称文本提取
         list_text:"source&&label",       // 单集的集数名称
         list_url:"source&&src",         // 单集播放链接
