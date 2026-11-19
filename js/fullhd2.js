@@ -17,45 +17,18 @@ var rule = {
 推荐:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
+//====临时禁用while循环，用来排查正则循环问题====
+/*
 let regBlock = /<a[^>]*class="[^"]*thumb_img[^"]*"[\s\S]*?<\/a\s*>/g;
 let match;
-
 while((match = regBlock.exec(htmlText)) !== null){
-    let blk = match[0];
-
-    //提取 title
-    let mTitle = /title\s*=\s*["']([^"']+)["']/.exec(blk);
-    let title = mTitle ? mTitle[1] : "无标题";
-
-    //提取 a 的 href，作为 vod_id（详情页链接）
-    let mHref = /href\s*=\s*["']([^"']+)["']/.exec(blk);
-    let href = mHref ? mHref[1] : "";
-    
-    //提取图片data‑src，暂时不调用urljoin！！！
-    let mImg = /data-src\s*=\s*["']([^"']+)["']/.exec(blk);
-    let rawImg = mImg ? mImg[1] : "";
-    let realImg = rawImg; 
-
-    //提取duration
-    let mDur = /<span\s+class="duration">([\s\S]*?)<\/span>/.exec(blk);
-    let duration = mDur ? mDur[1].trim() : "";
-
-    // href为空就跳过本条
-    if(!href) continue;
-
-    arr.push({
-        vod_name: title,
-        vod_pic: realImg,
-        vod_remarks: duration,
-        vod_id: href
-    });
+    ......
 }
-
-// 兜底条目
+*/
 if(arr.length === 0){
     arr.push({
-        vod_name:"⚠解析无结果",
-        vod_remarks:"MY_URL:"+MY_URL+" | html长度:"+(htmlText?.length||0),
+        vod_name:"⚠仅兜底测试",
+        vod_remarks:"html长度:"+(htmlText?.length||0),
         vod_id:"#err"
     });
 }
