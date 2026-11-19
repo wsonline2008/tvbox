@@ -15,7 +15,7 @@ var rule = {
     cate_exclude:'应用',
     推荐:'a.thumb_img;title;img&&src;span.duration&&Text;href',
     double:false,
-    limit:5,
+    limit:50,
     play_parse:false,
     //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
     一级:`js:
