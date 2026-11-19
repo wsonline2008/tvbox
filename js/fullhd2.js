@@ -15,18 +15,39 @@ var rule = {
     cate_exclude:'应用',
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
 推荐:`js:
-let htmlText = getHtml(host+homeUrl);
+let htmlText = getHtml(MY_URL);
 let $ = html(htmlText);
+let itemList = $("a.thumb_img");
 let arr = [];
-$("a.thumb_img").each((i,el)=>{
+
+// 先把【全局调试信息】做成一条测试条目，方便第一眼看到总数
+arr.push({
+    vod_name:"【调试统计条目】",
+    vod_pic:"",
+    vod_remarks: "找到元素总数:" + itemList.length + " | MY_URL:" + MY_URL,
+    vod_id:"#debug" 
+});
+
+itemList.each((i,el)=>{
+    let title = $(el).attr("title") || "【title空】";
+    let imgSrc = $(el).find("img").attr("src") || "【imgSrc空】";
+    let duration = $(el).find("span.duration").text() || "【duration空】";
+    let href = $(el).attr("href") || "【href空】";
+
+    // 每一条原始条目，把抓取到的全部信息塞到remarks，列表直接看
     arr.push({
-        vod_name:"测试标题",
-        vod_pic: $(el).find("img").attr("src")||"",
-        vod_remarks: $(el).find("span.duration").text()||"",
-        vod_id: $(el).attr("href")||""
+        vod_name: title,
+        vod_pic: imgSrc,
+        vod_remarks:
+            "序号:"+i
+            + " | title:" + title
+            + " | href:" + href
+            + " | imgSrc:" + imgSrc
+            + " | duration:" + duration,
+        vod_id: href // 保留真实抓取到的href，不要改成调试文字！
     });
 });
-console.log("抓到条目总数：",arr.length);
+
 VODS = arr;
 `,
     double:false,
