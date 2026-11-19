@@ -27,7 +27,7 @@
     "分类片单是否Jsoup写法": "1",
     "分类片单标题": "title",
     "分类片单链接": "href",
-    "分类片单图片": "img&&data-echo||data-src||src.js:input.replace('@2x','')",
+    "分类片单图片": "href.js:{let m = input.match(/videos\\/(\\d+)/);if(!m) return '';let vid = m[1];let dir1 = Math.floor(vid / 10000) * 10000;return `https://img.fullhd.to/${dir1}/${vid}/small/1.jpg`;}",
     "分类片单副标题": "span.duration&&Text",
     "分类片单链接加前缀": "",
     "分类片单链接加后缀": "",
