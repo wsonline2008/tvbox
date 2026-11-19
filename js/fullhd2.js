@@ -40,7 +40,7 @@ $("a.thumb_img").each((i,el)=>{
         title: "",          // 片名选择器
         img: "",       // 详情页封面
         desc: "类型",
-        content:".intro&&Text",     // 简介
+        content:"",     // 简介
         tabs:"",       // 线路/标签外层容器
         lists:"",   // 每一条线路对应的选集容器，#id会自动替换线路下标
         tab_text:"",      // 线路名称文本提取
