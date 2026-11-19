@@ -20,10 +20,11 @@ let arr = [];
 
 let posThumb = htmlText.indexOf('class="thumb_img"');
 let posAStart = htmlText.lastIndexOf('<a ', posThumb);
-let posAEnd = htmlText.indexOf('</a >', posThumb);
+// 无空格 </a>
+let posAEnd = htmlText.indexOf('</a>', posThumb);
 
 if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
-    let aBlock = htmlText.substring(posAStart, posAEnd + 5);
+    let aBlock = htmlText.substring(posAStart, posAEnd + 4);
     arr.push({
         vod_name:"✅截取成功测试",
         vod_remarks:"aBlock长度=" + aBlock.length,
@@ -34,6 +35,7 @@ if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
 if(arr.length === 0){
     arr.push({
         vod_name:"⚠未捕获",
+        vod_remarks:"posThumb="+posThumb+" | posAStart="+posAStart+" | posAEnd="+posAEnd,
         vod_id:"#err"
     });
 }
