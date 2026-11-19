@@ -42,7 +42,7 @@ if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
         imgSrc = mImg[1];
     }
     // duration
-    let mDur = aBlock.match(/<span class="duration">(.*)</span>/);
+    let mDur = aBlock.match(/<span class="duration">(.*)span>/);
     let dur = "";
     if(mDur){
         dur = mDur[1];
@@ -87,7 +87,7 @@ $("a.thumb_img").each((i,el)=>{
     `,
 
 
-    //二级:';;;;;video;source&&label;source&&src',
+    二级:';;;;;video;source&&label;source&&src',
     //二级:{
     //    title: "1",          // 片名选择器
     //    img: "",       // 详情页封面
@@ -100,38 +100,5 @@ $("a.thumb_img").each((i,el)=>{
     //    list_url:"source&&src",         // 单集播放链接
     //    重定向:""             // 拿到详情html之后执行js，可以返回新html
     //},
-二级:`js:
-let htmlText = getHtml(MY_URL);
-let $ = html(htmlText);
-let sourceArr = [];
-
-// 取出video下面全部source标签
-$("video source").each((i, el)=>{
-    let src = $(el).attr("src") || "";
-    let label = $(el).attr("label") || "";
-    if(src){ // 过滤空地址
-        sourceArr.push({
-            text: label,
-            url: src
-        });
-    };
-});
-// =========核心：数组反向排序=========
-sourceArr.reverse();
-// 拼接成格式：集名$播放地址#集名$播放地址
-let playListStr = sourceArr.map(item=>{
-    return item.text + "$" + item.url;
-}).join("#");
-
-VOD = {
-    vod_name: "",       //片名按需填写，留空就""
-    vod_pic: "",        //封面，按需从页面抓取
-    vod_remarks: "",
-    vod_content: "从video-source抓取，已经反向排序",
-    vod_play_from: "默认线路",  //线路名称，多条线路可以继续扩展
-    vod_play_url: playListStr
-};
-console.log("反向后的选集列表：", playListStr);
-`,
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
