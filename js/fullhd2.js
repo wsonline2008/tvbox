@@ -1,5 +1,5 @@
 let site = {
-    host: "https://www.baidu.to",
+    host: "https://www.fullhd.to",
     headers: {
         "User-Agent": MOBILE_UA,
         "Accept": "text/html",
@@ -11,7 +11,7 @@ let site = {
     play_json: [],
 
     // 首页
-    homeUrl: "https://www.baidu.to/zh",
+    homeUrl: "https://www.fullhd.to/zh",
     home: async function () {
         // 硬编码分类：最新&最佳&热门
         const cats = [
@@ -66,7 +66,7 @@ let site = {
             if(m){
                 let vid = m[1];
                 let dir1 = Math.floor(Number(vid) / 10000) * 10000;
-                pic = `https://img.baidu.to/${dir1}/${vid}/small/1.jpg`;
+                pic = `https://img.fullhd.to/${dir1}/${vid}/small/1.jpg`;
             }
             let subTitle = $(el).find('span.duration').text() || '';
             subTitle = '时长' + subTitle;
