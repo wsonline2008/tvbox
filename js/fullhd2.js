@@ -17,21 +17,24 @@ var rule = {
 推荐:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
-
 let posThumb = htmlText.indexOf('class="thumb_img"');
 let posAStart = htmlText.lastIndexOf('<a ', posThumb);
-// 无空格 </a>
 let posAEnd = htmlText.indexOf('</a>', posThumb);
 
 if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
     let aBlock = htmlText.substring(posAStart, posAEnd + 4);
+    // ✅只增加 href match提取，其他字段暂时不加！！
+    let mHref = aBlock.match(/href\s*=\s*["']([^"']+)["']/);
+    let href = "";
+    if(mHref){
+        href = mHref[1];
+    }
     arr.push({
-        vod_name:"✅截取成功测试",
-        vod_remarks:"aBlock长度=" + aBlock.length,
-        vod_id:"#temp"
+        vod_name:"测试提取href",
+        vod_remarks:"href=" + href,
+        vod_id:href
     });
 }
-
 if(arr.length === 0){
     arr.push({
         vod_name:"⚠未捕获",
