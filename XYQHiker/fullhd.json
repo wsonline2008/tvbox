@@ -21,9 +21,8 @@
         "分类导航页面": "https://www.fullhd.to/zh/categories/",
         "分类数组规则": "a.item",
         "分类名称": "title",
-        "分类id": "href",
-        "分类链接模板": "{cateId}{catePg}/",
-        "分类分页后缀": "{catePg}/"
+        "分类链接": "href",
+        "分类分页后缀": "/{catePg}/"
     },
     "详情是否Jsoup写法": "是",
     "类型详情": "",
