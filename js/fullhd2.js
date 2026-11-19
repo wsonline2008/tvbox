@@ -18,17 +18,52 @@ var rule = {
 let htmlText = getHtml(MY_URL);
 let arr = [];
 
-let posA = htmlText.indexOf('class="thumb_img"');
-let cutStr = htmlText.substring(posA, posA + 100);
-// 只用一次简单 match，先不进入循环
-let m = cutStr.match(/title="([^"]+)"/);
-let title = m ? m[1] : "空";
+// 第一步：找到 class="thumb_img"
+let posThumb = htmlText.indexOf('class="thumb_img"');
+if(posThumb !== -1){
+    // 向前回溯找 <a 的起点：从posThumb往回找，向前搜索最近的 "<a "
+    let posAStart = htmlText.lastIndexOf('<a ', posThumb);
+    // 向后找 </a > 作为结束标记
+    let posAEnd = htmlText.indexOf('</a >', posThumb);
+    if(posAStart !== -1 && posAEnd !== -1){
+        // 截取出这一整块a标签
+        let aBlock = htmlText.substring(posAStart, posAEnd + 5);
 
-arr.push({
-    vod_name:"阶段3测试",
-    vod_remarks:"title=" + title,
-    vod_id:"#s3"
-});
+        // 用match提取 title
+        let mTitle = aBlock.match(/title\s*=\s*["']([^"']+)["']/);
+        let title = mTitle ? mTitle[1] : "无标题";
+
+        // 提取 href（按你的需求，这个就是详情页链接 vod_id）
+        let mHref = aBlock.match(/href\s*=\s*["']([^"']+)["']/);
+        let href = mHref ? mHref[1] : "";
+
+        // 提取图片 data-src
+        let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
+        let imgSrc = mImg ? mImg[1] : "";
+
+        // 提取 duration
+        let mDur = aBlock.match(/<span\s+class="duration">([\s\S]*?)<\/span>/);
+        let dur = mDur ? mDur[1] : "";
+
+        if(href !== ""){
+            arr.push({
+                vod_name: title,
+                vod_pic: imgSrc,
+                vod_remarks: "duration:" + dur,
+                vod_id: href
+            });
+        }
+    }
+}
+
+//兜底条目
+if(arr.length === 0){
+    arr.push({
+        vod_name:"⚠未捕获到数据",
+        vod_remarks:"posThumb:"+posThumb,
+        vod_id:"#err"
+    });
+}
 VODS = arr;
 `,
     double:false,
