@@ -24,10 +24,10 @@ var rule = {
 let arr=[];
 $("a.thumb_img").each((i,el)=>{
     arr.push({
-        vod_id: $(el).attr("href"),
-        vod_name: $(el).attr("title"),
-        vod_pic: $(el).find("img").attr("src"),
-        vod_remarks: $(el).find("span.duration").text(),
+        vod_id: $(el).attr("href") || "",
+        vod_name: $(el).attr("title") || "",
+        vod_pic: $(el).find("img").attr("src") || "",
+        vod_remarks: $(el).find("span.duration").text() || "",
         vod_year: "2026",
         vod_area: "内地",
         vod_actor: "张三",
