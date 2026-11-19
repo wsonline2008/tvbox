@@ -1,7 +1,7 @@
 var rule = {
     title:'fullhd',
-    host:'https://www.fullhd.to/zh',
-    //homeUrl:'/zh',
+    host:'https://www.fullhd.to',
+    homeUrl:'/zh',
     url:'/fyclass/',
     searchUrl:'/search/**',
     searchable:2,
@@ -13,7 +13,22 @@ var rule = {
     class_name:'最新&最佳&热门',
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
-    推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
+    //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
+推荐:`js:
+let htmlText = getHtml(MY_URL);
+let $ = html(htmlText);
+let arr = [];
+$("a.thumb_img").each((i,el)=>{
+    arr.push({
+        vod_name:"测试标题",
+        vod_pic: $(el).find("img").attr("src")||"",
+        vod_remarks: $(el).find("span.duration").text()||"",
+        vod_id: $(el).attr("href")||""
+    });
+});
+console.log("抓到条目总数：",arr.length);
+VODS = arr;
+`,
     double:false,
     limit:50,
     play_parse:false,
@@ -32,7 +47,7 @@ $("a.thumb_img").each((i,el)=>{
         vod_area: "内地",
         vod_actor: "张三",
         vod_content: "这是剧情简介"
-    })
+    });
 });
     VODS = arr; //一级/推荐js模式赋值VODS，不要VOD
     `,
@@ -64,8 +79,8 @@ $("video source").each((i, el)=>{
         sourceArr.push({
             text: label,
             url: src
-        })
-    }
+        });
+    };
 });
 // =========核心：数组反向排序=========
 sourceArr.reverse();
