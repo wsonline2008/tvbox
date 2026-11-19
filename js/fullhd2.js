@@ -18,14 +18,15 @@ var rule = {
 let htmlText = getHtml(MY_URL);
 let arr = [];
 
-// 只做最基础的字符串操作，不定义 function，不写exec、不写复杂正则
 let posA = htmlText.indexOf('class="thumb_img"');
 let testStr = "posA=" + posA;
+// 只增加一次 substring，不做循环、不写 function、不写 exec
+let cutStr = htmlText.substring(posA, posA + 100);
 
 arr.push({
-    vod_name:"阶段1测试",
-    vod_remarks: testStr,
-    vod_id:"#s1"
+    vod_name:"阶段2测试",
+    vod_remarks: testStr + " | cutStr=" + cutStr,
+    vod_id:"#s2"
 });
 VODS = arr;
 `,
