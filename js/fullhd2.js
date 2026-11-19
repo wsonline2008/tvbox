@@ -15,11 +15,18 @@ var rule = {
     cate_exclude:'应用',
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
 推荐:`js:
-let arr=[];
-arr.push({
-    vod_name:"简易测试标题",
-    vod_id:"test001"
+let htmlText = getHtml(host+homeUrl);
+let $ = html(htmlText);
+let arr = [];
+$("a.thumb_img").each((i,el)=>{
+    arr.push({
+        vod_name:"测试标题",
+        vod_pic: $(el).find("img").attr("src")||"",
+        vod_remarks: $(el).find("span.duration").text()||"",
+        vod_id: $(el).attr("href")||""
+    });
 });
+console.log("抓到条目总数：",arr.length);
 VODS = arr;
 `,
     double:false,
