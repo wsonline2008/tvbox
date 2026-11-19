@@ -2,15 +2,15 @@ var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to',
     homeUrl:'/zh',
-    url:'/fyclass/',
+    url:'/fyclass/fypage',
     searchUrl:'/search/**',
     searchable:2,
     headers:{
         'User-Agent':'MOBILE_UA'
     },
     timeout:5000,
-    class_url:'latest-updates&top-rated&most-popular',
-    class_name:'最新&最佳&热门',
+    class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
+    class_name:'最新&最佳&热门&Brazzers&Tushy&NaughtyA&Sexmex&Passion&动画&18岁&丰臀女孩&丁字裤&丝袜&日本未审查&连裤袜',
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
@@ -40,28 +40,37 @@ while(true){
         if(mTitle){
             title = mTitle[1];
         }
-        // data‑src 图片
-        // ========== ✅重点新增：提取 data-object_id + 拼接图片 ==========
+        // ========== 从href路径 /videos/后面截取数字ID，切掉末尾3位 ==========
         let objId = "";
-        let idKey = 'data-object_id="';
-        let idStart = aBlock.indexOf(idKey);
-        if (idStart !== -1) {
-            let idValueStart = idStart + idKey.length;
-            let idEnd = aBlock.indexOf('"', idValueStart);
-            if (idEnd !== -1) {
-                objId = aBlock.substring(idValueStart, idEnd);
-            }
-        }
-        // ⚠️【这里一定要改成你真实图片模板！！】
         let imgSrc = "";
-        if(objId){
-            imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
+        if(href){
+            let key = "/videos/";
+            let sPos = href.indexOf(key);
+            if(sPos !== -1){
+                let idStart = sPos + key.length;
+                let ePos = href.indexOf("/", idStart);
+                if(ePos !== -1){
+                    objId = href.substring(idStart, ePos);
+                    if(objId.length >= 3){
+                        objId = objId.substring(0, objId.length - 3);
+                    }
+                }
+            }
+            // ⚠️务必替换为站点真实图片URL模板
+            if(objId){
+                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
+            }
         }
         // duration（完全保留你原来这一段，未做修改）
         let mDur = aBlock.match(/<span class="duration">(。*)span>/);
         let dur = "";
         if(mDur){
-            dur = mDur[1].replace('Full Video','长');
+            let dkey = "Full Video";
+            let dsPos = mDur[1].indexOf(dkey);
+            if(dsPos == -1){
+                dsPos=0;
+            }
+            dur = mDur[1].substring(dsPos, mDur[1].length - 2);
         }
         arr.push({
             vod_name: title,
