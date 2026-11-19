@@ -70,7 +70,7 @@ while(true){
         arr.push({
             vod_name: title,
             vod_pic: imgSrc,
-            vod_remarks: dur,
+            vod_remarks: objId.substring(0, objId.length - 3)+objId,
             vod_id:href
         });
     }
