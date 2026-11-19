@@ -25,6 +25,7 @@
         "分类链接模板": "https://www.fullhd.to/zh/categories/{cateId}/{catePg}/",
         "分类分页后缀": "/{catePg}/"
     },
+    "详情是否Jsoup写法": "是",
     "详情链接": "$url",
     "详情数组规则": "video source",
     "播放地址": "src",
