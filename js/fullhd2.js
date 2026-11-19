@@ -17,7 +17,25 @@ var rule = {
     double:true,
     limit:5,
     play_parse:false,
-    一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
+    //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
+    一级:`js:
+    let htmlText = getHtml(MY_URL);
+    let $ = html(htmlText);
+let arr=[];
+$("a.thumb_img").each((i,el)=>{
+    arr.push({
+        vod_id: $(el).attr("href"),
+        vod_name: $(el).attr("title"),
+        vod_pic: $(el).find("img").attr("src"),
+        vod_remarks: $(el).find("span.duration").text(),
+        vod_year: "2026",
+        vod_area: "内地",
+        vod_actor: "张三",
+        vod_content: "这是剧情简介"
+    })
+});
+    VODS = arr; //一级/推荐js模式赋值VODS，不要VOD
+    `,
     二级:{
         title: "",          // 片名选择器
         img: "",       // 详情页封面
