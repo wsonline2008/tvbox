@@ -19,7 +19,7 @@ let htmlText = getHtml(MY_URL);
 let $ = html(htmlText);
 let arr = [];
 arr.push({
-    vod_name:MY_URL,
+    vod_name:"aa",
     vod_remarks:"html()转换成功",
     vod_id:"#b"
 });
