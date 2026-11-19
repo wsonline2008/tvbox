@@ -17,64 +17,17 @@ var rule = {
 推荐:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
-let regBlock = /<a[^>]*class="[^"]*thumb_img[^"]*"[\s\S]*?<\/a\s*>/g;
-let match;
-while(true){
-    match = regBlock.exec(htmlText);
-    if(match === null){
-        break;
-    }
-    let blk = match[0];
+//单独测试exec，用一条极简单正则，不搞[\s\S]*?这种复杂东西
+let regTest = /title\s*=\s*["']([^"']+)["']/;
+let testStr = `<a title="影片ABC"></a>`;
+let ret = regTest.exec(testStr);
+let debugText = "exec返回=" + (ret ? "成功,捕获="+ret[1] : "返回null");
 
-    // ==========title 提取，严谨判空==========
-    let mTitle = /title\s*=\s*["']([^"']+)["']/.exec(blk);
-    let title = "无标题";
-    if(mTitle !== null){
-        title = mTitle[1];
-    }
-
-    // ==========href提取（vod_id，你指定的详情页链接）==========
-    let mHref = /href\s*=\s*["']([^"']+)["']/.exec(blk);
-    let href = "";
-    if(mHref !== null){
-        href = mHref[1];
-    }
-
-    // ==========data-src图片提取==========
-    let mImg = /data-src\s*=\s*["']([^"']+)["']/.exec(blk);
-    let rawImg = "";
-    if(mImg !== null){
-        rawImg = mImg[1];
-    }
-
-    // ==========duration==========
-    let mDur = /<span\s+class="duration">([\s\S]*?)<\/span>/.exec(blk);
-    let duration = "";
-    if(mDur !== null){
-        duration = mDur[1].trim();
-    }
-
-    // href为空就跳过本条
-    if(href === ""){
-        continue;
-    }
-
-    arr.push({
-        vod_name: title,
-        vod_pic: rawImg,
-        vod_remarks: duration,
-        vod_id: href
-    });
-}
-
-//兜底条目
-if(arr.length === 0){
-    arr.push({
-        vod_name:"⚠解析无结果",
-        vod_remarks:"MY_URL:"+MY_URL,
-        vod_id:"#err"
-    });
-}
+arr.push({
+    vod_name:"exec功能测试",
+    vod_remarks: debugText,
+    vod_id:"#exec_test"
+});
 VODS = arr;
 `,
     double:false,
