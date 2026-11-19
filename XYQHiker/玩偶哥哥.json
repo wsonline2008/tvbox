@@ -10,4 +10,9 @@
     "首页列表数组规则": "body&&.module-items",
     "首页片单列表数组规则": ".module-item:not(:matches(饭太硬|公众号))",
     "首页片单是否Jsoup写法": "1",
+    "分类起始页码": "1",
+    //"分类链接": "https://www.wogg.net/index.php/vodshow/{cateId}--{by}------{catePg}---{year}.html",
+    "分类链接": "https://www.wogg.net/vodshow/{cateId}--{by}------{catePg}---{year}.html",
+    "分类名称": "电影&电视剧&综艺&动漫&短剧&音乐空间",
+    "分类名称替换词": "1&2&4&3&6&5",
 }
