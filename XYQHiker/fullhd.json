@@ -9,11 +9,6 @@
     "首页片单列表数组规则": "body&&div.item",
     "首页片单标题": "a.thumb_img&&title",
     "首页片单链接": "a.thumb_img&&href",
-    "首页片单图片": "img&&data-src",
-    "首页片单副标题": "span.duration&&text()",
     "首页片单是否Jsoup写法": "1",
-"详情链接": "$url",
-"详情数组规则": "//video//source",
-"播放地址": "@src",
 
 }
