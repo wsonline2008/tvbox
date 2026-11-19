@@ -10,7 +10,7 @@
     "首页片单列表数组规则": "a.thumb_img",
     "首页片单标题": "title",
     "首页片单链接": "href",
-    "首页片单图片": "img&&data-echo||data-src||src.js:input.replace('@2x','')",
+    "首页片单图片": "href.js:{let m = input.match(/videos\\/(\\d+)/);if(!m) return '';let vid = m[1];let dir1 = Math.floor(vid / 10000) * 10000;return `https://img.fullhd.to/${dir1}/${vid}/small/1.jpg`;}",
     "首页片单副标题": "span.duration&&Text",
     "首页片单是否Jsoup写法": "1",
     "POST请求数据": "",
