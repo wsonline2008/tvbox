@@ -42,7 +42,7 @@ if(posThumb !== -1 && posAStart !== -1 && posAEnd !== -1){
         imgSrc = mImg[1];
     }
     // duration
-    let mDur = aBlock.match(/<span class="duration">(.*)<\/span>/);
+    let mDur = aBlock.match(/<span class="duration">(.*)span>/);
     let dur = "";
     if(mDur){
         dur = mDur[1];
