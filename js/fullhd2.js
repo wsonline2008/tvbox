@@ -16,13 +16,50 @@ var rule = {
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
 推荐:`js:
 let htmlText = getHtml(MY_URL);
-let $ = html(htmlText);
 let arr = [];
-arr.push({
-    vod_name:"aa",
-    vod_remarks:"html()转换成功",
-    vod_id:"#b"
-});
+// 匹配整块 <a class="thumb_img"> ... </a >
+let regBlock = /<a[^>]*class="[^"]*thumb_img[^"]*"[\s\S]*?<\/a\s*>/g;
+let match;
+
+while((match = regBlock.exec(htmlText)) !== null){
+    let blk = match[0];
+
+    //提取 title
+    let mTitle = /title\s*=\s*["']([^"']+)["']/.exec(blk);
+    let title = mTitle ? mTitle[1] : "无标题";
+
+    // ✅【重点修改】提取 a 的 href，作为 vod_id（详情页链接）
+    let mHref = /href\s*=\s*["']([^"']+)["']/.exec(blk);
+    let href = mHref ? mHref[1] : "";
+    
+    //提取图片data‑src，补全相对url
+    let mImg = /data-src\s*=\s*["']([^"']+)["']/.exec(blk);
+    let rawImg = mImg ? mImg[1] : "";
+    let realImg = rawImg ? urljoin(MY_URL, rawImg) : "";
+
+    //提取duration，去除前后换行空格
+    let mDur = /<span\s+class="duration">([\s\S]*?)<\/span>/.exec(blk);
+    let duration = mDur ? mDur[1].trim() : "";
+
+    // href为空就跳过本条，防止无效条目
+    if(!href) continue;
+
+    arr.push({
+        vod_name: title,
+        vod_pic: realImg,
+        vod_remarks: duration,
+        vod_id: href
+    });
+}
+
+// 解析失败兜底，输出调试条目，列表可见，不用看控制台
+if(arr.length === 0){
+    arr.push({
+        vod_name:"⚠解析无结果",
+        vod_remarks:"MY_URL:"+MY_URL+" | html长度:"+(htmlText?.length||0),
+        vod_id:"#err"
+    });
+}
 VODS = arr;
 `,
     double:false,
