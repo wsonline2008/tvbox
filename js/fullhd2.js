@@ -14,11 +14,10 @@ var rule = {
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
-推荐:`js:
+一级:`js:
 let htmlText = getHtml(MY_URL);
 let arr = [];
 let searchPos = 0;
-
 while(true){
     let posThumb = htmlText.indexOf('class="thumb_img"', searchPos);
     if(posThumb === -1){
@@ -42,10 +41,21 @@ while(true){
             title = mTitle[1];
         }
         // data‑src 图片
-        let mImg = aBlock.match(/data-src\s*=\s*["']([^"']+)["']/);
+        // ========== ✅重点新增：提取 data-object_id + 拼接图片 ==========
+        let objId = "";
+        let idKey = 'data-object_id="';
+        let idStart = aBlock.indexOf(idKey);
+        if (idStart !== -1) {
+            let idValueStart = idStart + idKey.length;
+            let idEnd = aBlock.indexOf('"', idValueStart);
+            if (idEnd !== -1) {
+                objId = aBlock.substring(idValueStart, idEnd);
+            }
+        }
+        // ⚠️【这里一定要改成你真实图片模板！！】
         let imgSrc = "";
-        if(mImg){
-            imgSrc = mImg[1];
+        if(objId){
+            imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
         }
         // duration（完全保留你原来这一段，未做修改）
         let mDur = aBlock.match(/<span class="duration">(。*)span>/);
@@ -69,26 +79,7 @@ VODS = arr;
     limit:50,
     play_parse:false,
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
-    一级:`js:
-    let htmlText = getHtml(MY_URL);
-    let $ = html(htmlText);
-let arr=[];
-$("a.thumb_img").each((i,el)=>{
-    arr.push({
-        vod_id: $(el).attr("href") || "",
-        vod_name: $(el).attr("title") || "",
-        vod_pic: $(el).find("img").attr("src") || "",
-        vod_remarks: $(el).find("span.duration").text() || "",
-        vod_year: "2026",
-        vod_area: "内地",
-        vod_actor: "张三",
-        vod_content: "这是剧情简介"
-    });
-});
-    VODS = arr; //一级/推荐js模式赋值VODS，不要VOD
-    `,
-
-
+    推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
     二级:{
         title: "1",          // 片名选择器
