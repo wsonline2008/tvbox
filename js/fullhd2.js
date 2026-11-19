@@ -16,11 +16,12 @@ var rule = {
     //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
 推荐:`js:
 let htmlText = getHtml(MY_URL);
+let $ = html(htmlText);
 let arr = [];
 arr.push({
-    vod_name:"测试A",
-    vod_remarks:"getHtml执行完成，htmlText长度:" + (htmlText?.length || 0),
-    vod_id:"#a"
+    vod_name:MY_URL,
+    vod_remarks:"html()转换成功",
+    vod_id:"#b"
 });
 VODS = arr;
 `,
