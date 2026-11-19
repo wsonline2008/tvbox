@@ -14,7 +14,7 @@ var rule = {
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
     推荐:'body;a.thumb_img;title;img&&src;span.duration&&Text;href',
-    double:true,
+    double:false,
     limit:5,
     play_parse:false,
     //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
@@ -40,7 +40,7 @@ $("a.thumb_img").each((i,el)=>{
 
     //二级:';;;;;video;source&&label;source&&src',
     二级:{
-        title: "",          // 片名选择器
+        title: "1",          // 片名选择器
         img: "",       // 详情页封面
         desc: "类型",
         content:"简介",     // 简介
