@@ -2,7 +2,7 @@ var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to',
     homeUrl:'/zh',
-    url:'/fyclass/',
+    url:'/class/fypage/[/class/]',
     searchUrl:'/search/**',
     searchable:2,
     headers:{
