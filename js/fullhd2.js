@@ -2,7 +2,7 @@ var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to/zh',
     //homeUrl:'/zh',
-    url:'/fyclass/fypage',
+    url:'/fyclass/',
     searchUrl:'/search/**',
     searchable:2,
     headers:{
@@ -13,11 +13,11 @@ var rule = {
     class_name:'最新&最佳&热门',
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
     cate_exclude:'应用',
-    推荐:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
+    推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
     double:false,
     limit:50,
     play_parse:false,
-    //一级:'a.thumb_img;title;img&&src;span.duration&&Text;href',
+    //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     一级:`js:
     let htmlText = getHtml(MY_URL);
     let $ = html(htmlText);
