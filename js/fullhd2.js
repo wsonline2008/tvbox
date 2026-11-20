@@ -106,7 +106,7 @@ VODS = arr;
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
     二级:{
-        title: "1",          // 片名选择器
+        title: "111111111",          // 片名选择器
         img: "video&&poster",       // 详情页封面
         desc: "类型",
         content:"简介",     // 简介
@@ -149,7 +149,6 @@ if(pic !== ""){
 }
     }
 }
-
 // while循环抓取全部source标签
 let sourceList = [];
 let searchIdx = 0;
@@ -204,7 +203,6 @@ for(let q=0; q < queue.length; q++){
         }
     }
 }
-
 // ✅【重点改造：每一条清晰度生成一条独立线路！！不再拼接成单条urls，适配changeable换源切换清晰度】
 let vod_play_data = [];
 for(let i=0;i<resultList.length;i++){
@@ -215,7 +213,6 @@ for(let i=0;i<resultList.length;i++){
     };
     vod_play_data.push(oneLine);
 }
-
 // =========返回结果，如果你需要remark，在这里增加remark字段：remark:remark=========
 let vodDetail = {
     title:"",
@@ -226,6 +223,5 @@ return vodDetail;
 `
 // 拿到详情html之后执行js，可以返回新html
     },
-
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
