@@ -111,16 +111,12 @@ VODS = arr;
         img: "video&&poster",       // 详情页封面
         desc: "类型",
         content:"简介",     // 简介
-        tabs:"video",       // 线路/标签外层容器
-        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-        tab_text:"线路",      // 线路名称文本提取
-        list_text:"source&&label",       // 单集的集数名称
+        tabs:"source",       // 线路/标签外层容器
+        lists:"source:eq(#index#)",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+        tab_text:"source&&label",      // 线路名称文本提取
+        list_text:"正片",       // 单集的集数名称
         list_url:"source&&src",         // 单集播放链接
-        "重定向":`
-        var h = html;
-        h = h.replace(/label="[^"]+"/g,'label="测试修改成功"');
-        return h;
-    `
+        "重定向":""
 },
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
