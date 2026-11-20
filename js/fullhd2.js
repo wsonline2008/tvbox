@@ -99,24 +99,7 @@ if(pos !== -1){
 }
 VODS = arr;
 `,
-lazy:`
-log("✅ lazy 成功触发！input = " + input);
 
-// 直接手写固定测试数据，不需要去请求网页、解析video/source
-let test_result = {
-    title:"测试影片",
-    img:"https://via.placeholder.com/300x200.jpg",
-    vod_play_data:[
-        {
-            name:"测试线路720P",
-            urls:"正片$https://www.w3schools.com/html/mov_bbb.mp4"
-        }
-    ]
-};
-
-// 提交结果
-setResult(test_result);
-`,
     double:false,
     limit:50,
     //play_parse:true,
@@ -124,18 +107,28 @@ setResult(test_result);
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
 二级:`js:
-// MY_URL 就是二级拿到的待访问页面链接
-log("二级拿到的MY_URL="+MY_URL);
+log("二级开始执行，MY_URL="+MY_URL);
+let pageUrl = MY_URL;
+let pageHtml = "";
+try{
+    pageHtml = getHtml(pageUrl);
+}catch(e){
+    log("getHtml报错："+e);
+}
 
-// 如果你这里不需要再去拉页面，直接return这个url就完事
-let result_url = MY_URL;
-
-// 如果你需要请求页面、正则/xpath在页面里面抓出真实播放url，你就写:
-// let html = getHtml(MY_URL);
-// result_url = pdh(html,"a","href"); //自己改成你提取链接逻辑
-
-log("二级最终输出url="+result_url);
-return result_url;
+//这里替换成你解析video、source代码，组装播放数组
+let vod = {
+    title:"测试",
+    img:"",
+    vod_play_data:[
+        {
+            name:"测试线路720P",
+            urls:"正片$https://www.w3schools.com/html/mov_bbb.mp4"
+        }
+    ]
+};
+//直接返回完整vod对象，不再送入嗅探、不再进lazy！！
+return vod;
 `,
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
