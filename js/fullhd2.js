@@ -117,15 +117,9 @@ VODS = arr;
         list_text:"source&&label",       // 单集的集数名称
         list_url:"source&&src",         // 单集播放链接
         "重定向":`
-        //【测试代码：遍历全部source，强行修改label值！！】
-        console.log("====重定向JS开始执行====");
-        let sourceList = $("source");
-        sourceList.each(function(index,el){
-            // 强行修改label，统一改成：测试清晰度_第N条
-            $(el).attr("label","测试清晰度_"+index);
-        });
-        console.log("====重定向JS执行完毕，返回新html====");
-        return $("html").html();
+        var h = $html;
+        h = h.replace(/label="[^"]+"/g,'label="测试修改成功"');
+        return h;
     `
 },
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
