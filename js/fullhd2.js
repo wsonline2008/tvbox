@@ -235,7 +235,7 @@ setResult(result);
 `,
     double:false,
     limit:50,
-    play_parse:true,
+    //play_parse:true,
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
