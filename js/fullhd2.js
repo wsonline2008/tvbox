@@ -6,7 +6,7 @@ var rule = {
     searchUrl:'/search/**/',
     searchable:2,
     headers:'User-Agent$MOBILE_UA#Referer$https://www.fullhd.to#Accept$text/html,image/jpeg,*/*#Accept-Language$zh-CN,zh;q=0.8',
-    timeout:5000,
+    timeout:8000,
     class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
     class_name:'最新&最佳&热门&Brazzers&Tushy&NaughtyA&Sexmex&Passion&动画&18岁&丰臀女孩&丁字裤&丝袜&日本未审查&连裤袜',
     //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
@@ -90,8 +90,8 @@ if(pos !== -1){
         }
         arr.push({
             vod_name: title,
-            vod_pic: "https://resource-cdn.tuxiaobei.com/video/FmS-d8yL4S4JoWnltNGRG58iPHxl.jpg",
-            vod_remarks: imgSrc.length,
+            vod_pic: imgSrc,
+            vod_remarks: dur,
             vod_id:href
         });
     }
