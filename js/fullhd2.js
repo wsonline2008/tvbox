@@ -115,6 +115,32 @@ let videoHtml = "";
 if(videoStart !== -1 && videoEnd !== -1){
     videoHtml = detailHtml.substring(videoStart, videoEnd + "</video>".length);
 }
+// =========新增：抓取video poster封面图片=========
+let pic = "";
+let posterKey = 'poster="';
+let pStart = videoHtml.indexOf(posterKey);
+if(pStart !== -1){
+    pStart = pStart + posterKey.length;
+    let pEnd = videoHtml.indexOf('"', pStart);
+    if(pEnd !== -1){
+        pic = videoHtml.substring(pStart, pEnd);
+        // 如果图片是相对路径，拼接baseHost
+        if(pic && pic.indexOf("http") !== 0){
+            pic = baseHost + pic;
+        }
+// ✅【超兼容版本，只用 indexOf、substring，不依赖高阶函数，推荐！】
+if(pic !== ""){
+    var findStr = "medium@2x";
+    var pos = pic.indexOf(findStr);
+    if(pos !== -1){
+        var left = pic.substring(0, pos);
+        var right = pic.substring(pos + findStr.length);
+        pic = left + "small" + right;
+    }
+}
+    }
+}
+
 // while循环抓取全部source标签
 let sourceList = [];
 let searchIdx = 0;
@@ -173,6 +199,7 @@ for(let i=0;i<resultList.length;i++){
 // 返回二级结果，补空title防止引擎字段校验报错
 let vodDetail = {
     title:"",
+    img: pic,
     vod_play_data:[
         {
             name:"线路",
