@@ -210,16 +210,25 @@ for(let q=0; q < queue.length; q++){
         }
     }
 }
-
-// 组装播放数组
+//替换原来筛选、组装部分，临时测试！
 let vod_play_data = [];
-for(let i=0;i<resultList.length;i++){
-    let item = resultList[i];
+for(let i=0;i<sourceList.length;i++){
+    let item = sourceList[i];
     vod_play_data.push({
         name: item.label,
         urls:"正片$"+item.src
     })
 }
+
+// 组装播放数组
+//let vod_play_data = [];
+//for(let i=0;i<resultList.length;i++){
+//    let item = resultList[i];
+//    vod_play_data.push({
+//        name: item.label,
+//        urls:"正片$"+item.src
+//    })
+//}
 result.vod_play_data = vod_play_data;
 
 setResult(result);
