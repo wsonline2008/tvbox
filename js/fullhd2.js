@@ -107,27 +107,18 @@ VODS = arr;
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
 二级:`js:
-log("二级开始执行，MY_URL="+MY_URL);
-let pageUrl = MY_URL;
-let pageHtml = "";
-try{
-    pageHtml = getHtml(pageUrl);
-}catch(e){
-    log("getHtml报错："+e);
-}
-
-//这里替换成你解析video、source代码，组装播放数组
+//log("二级最小测试，无getHtml");
 let vod = {
-    title:"测试",
-    img:"",
+    title:"测试影片",
+    img:"https://via.placeholder.com/300x200.jpg",
     vod_play_data:[
         {
-            name:"测试线路720P",
+            name:"测试线路",
             urls:"正片$https://www.w3schools.com/html/mov_bbb.mp4"
         }
     ]
 };
-//直接返回完整vod对象，不再送入嗅探、不再进lazy！！
+//log("返回vod对象："+JSON.stringify(vod));
 return vod;
 `,
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
