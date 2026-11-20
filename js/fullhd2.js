@@ -117,7 +117,7 @@ VODS = arr;
         list_text:"source&&label",       // 单集的集数名称
         list_url:"source&&src",         // 单集播放链接
         "重定向":`
-        var h = $html;
+        var h = html;
         h = h.replace(/label="[^"]+"/g,'label="测试修改成功"');
         return h;
     `
