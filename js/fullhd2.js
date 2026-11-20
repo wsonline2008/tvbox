@@ -100,138 +100,22 @@ if(pos !== -1){
 VODS = arr;
 `,
 lazy:`
-log("==== lazy开始执行，input地址："+input);
-let result = {
-    title:"",
-    img:"",
-    vod_play_data:[]
+log("✅ lazy 成功触发！input = " + input);
+
+// 直接手写固定测试数据，不需要去请求网页、解析video/source
+let test_result = {
+    title:"测试影片",
+    img:"https://via.placeholder.com/300x200.jpg",
+    vod_play_data:[
+        {
+            name:"测试线路720P",
+            urls:"正片$https://www.w3schools.com/html/mov_bbb.mp4"
+        }
+    ]
 };
-let pageUrl = input;
-if(!pageUrl || pageUrl.indexOf("http")!==0){
-    log("❌ lazy收到的input不是有效url");
-    setResult(result);
-    return;
-}
-let pageHtml = "";
-try{
-    pageHtml = getHtml(pageUrl);
-}catch(e){
-    log("❌ getHtml 请求报错："+e);
-    setResult(result);
-    return;
-}
-if(!pageHtml){
-    log("❌ 获取到的页面html为空");
-    setResult(result);
-    return;
-}
 
-let baseHost = "https://www.fullhd.to"; //替换成站点域名
-let videoStart = pageHtml.indexOf("<video");
-let videoEnd = pageHtml.indexOf("</video>", videoStart);
-let videoHtml = "";
-if(videoStart !== -1 && videoEnd !== -1){
-    videoHtml = pageHtml.substring(videoStart, videoEnd + "</video>".length);
-}
-
-// 抓取poster图片
-let pic = "";
-let posterKey = 'poster="';
-let pStart = videoHtml.indexOf(posterKey);
-if(pStart !== -1){
-    pStart = pStart + posterKey.length;
-    let pEnd = videoHtml.indexOf('"', pStart);
-    if(pEnd !== -1){
-        pic = videoHtml.substring(pStart, pEnd);
-        if(pic && pic.indexOf("http") !== 0){
-            pic = baseHost + pic;
-        }
-        var findStr = "medium@2x";
-        var pos = pic.indexOf(findStr);
-        if(pos !== -1){
-            var left = pic.substring(0, pos);
-            var right = pic.substring(pos + findStr.length);
-            pic = left + "small" + right;
-        }
-    }
-}
-result.img = pic;
-
-// while循环抓取全部source标签
-let sourceList = [];
-let searchIdx = 0;
-while(true){
-    let sStart = videoHtml.indexOf("<source", searchIdx);
-    if(sStart === -1) break;
-    let sEnd = videoHtml.indexOf(">", sStart);
-    if(sEnd === -1) break;
-    let sourceTag = videoHtml.substring(sStart, sEnd+1);
-
-    let label = "";
-    let labPos = sourceTag.indexOf('label="');
-    if(labPos !== -1){
-        let lS = labPos + 'label="'.length;
-        let lE = sourceTag.indexOf('"', lS);
-        if(lE !== -1) label = sourceTag.substring(lS,lE);
-    }
-    let src = "";
-    let srcPos = sourceTag.indexOf('src="');
-    if(srcPos !== -1){
-        let sS = srcPos + 'src="'.length;
-        let sE = sourceTag.indexOf('"', sS);
-        if(sE !== -1) src = sourceTag.substring(sS,sE);
-        if(src && src.indexOf("http") !== 0){
-            src = baseHost + src;
-        }
-    }
-    if(label !== "" && src !== ""){
-        sourceList.push({label:label, src:src});
-    }
-    searchIdx = sEnd + 1;
-}
-
-// 清晰度筛选，改成你页面source真实的label文字
-let resultList = [];
-let queue = ["480p", "720p", "1080p", "2160p"];
-for(let q=0; q < queue.length; q++){
-    let targetKey = queue[q];
-    for(let i=0; i < sourceList.length; i++){
-        let item = sourceList[i];
-        let alreadyHas = false;
-        for(let k=0;k<resultList.length;k++){
-            if(resultList[k].src === item.src){
-                alreadyHas = true;
-                break;
-            }
-        }
-        if(alreadyHas) continue;
-        if(item.label.toLowerCase().indexOf(targetKey.toLowerCase()) !== -1){
-            resultList.push(item);
-        }
-    }
-}
-//替换原来筛选、组装部分，临时测试！
-let vod_play_data = [];
-for(let i=0;i<sourceList.length;i++){
-    let item = sourceList[i];
-    vod_play_data.push({
-        name: item.label,
-        urls:"正片$"+item.src
-    })
-}
-
-// 组装播放数组
-//let vod_play_data = [];
-//for(let i=0;i<resultList.length;i++){
-//    let item = resultList[i];
-//    vod_play_data.push({
-//        name: item.label,
-//        urls:"正片$"+item.src
-//    })
-//}
-result.vod_play_data = vod_play_data;
-
-setResult(result);
+// 提交结果
+setResult(test_result);
 `,
     double:false,
     limit:50,
