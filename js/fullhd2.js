@@ -69,7 +69,7 @@ while(true){
     //    }
     //})
     // 二进制转 base64
-    let b64 = toBase64(imgBin);
+    //let b64 = toBase64(imgBin);
     //vod_pic = "data:image/jpeg;base64," + b64;
             }
         }
@@ -77,7 +77,11 @@ while(true){
         let mDur = aBlock.match(/<span class="duration">(。*)span>/);
         let dur = "";
         if(mDur){
-            dur = mDur[1].substring(1, mDur[1].length - 2);
+            dur = mDur[1];
+                    if(dur.length > 3){
+                        dur = dur.substring(0, dur.length - 2);
+                    }
+            //dur = mDur[1].substring(1, mDur[1].length - 2);
         }
         arr.push({
             vod_name: title,
