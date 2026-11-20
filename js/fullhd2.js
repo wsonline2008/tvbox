@@ -106,7 +106,7 @@ VODS = arr;
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
     二级:{
-        title: "111111111",          // 片名选择器
+        title: "1",          // 片名选择器
         img: "video&&poster",       // 详情页封面
         desc: "类型",
         content:"简介",     // 简介
@@ -149,6 +149,7 @@ if(pic !== ""){
 }
     }
 }
+
 // while循环抓取全部source标签
 let sourceList = [];
 let searchIdx = 0;
@@ -188,10 +189,10 @@ for(let q=0; q < queue.length; q++){
     let targetKey = queue[q];
     for(let i=0; i < sourceList.length; i++){
         let item = sourceList[i];
-        // 判断是否已经添加过这个item，防止重复压入
+        // 判断是否已经添加过这个视频src，防止重复压入【修复！！！】
         let alreadyHas = false;
         for(let k=0;k<resultList.length;k++){
-            if(resultList[k] === item){
+            if(resultList[k].src === item.src){
                 alreadyHas = true;
                 break;
             }
@@ -213,6 +214,7 @@ for(let i=0;i<resultList.length;i++){
     };
     vod_play_data.push(oneLine);
 }
+
 // =========返回结果，如果你需要remark，在这里增加remark字段：remark:remark=========
 let vodDetail = {
     title:"",
@@ -223,5 +225,6 @@ return vodDetail;
 `
 // 拿到详情html之后执行js，可以返回新html
     },
+
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
