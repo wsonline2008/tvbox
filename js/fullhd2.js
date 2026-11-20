@@ -230,17 +230,19 @@ setResult(result);
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
-   二级:{
-        title: "1",          // 片名选择器
-        img: "video&&poster",       // 详情页封面
-        desc: "类型",
-        content:"简介",     // 简介
-        tabs:"video",       // 线路/标签外层容器
-        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-        tab_text:"线路",      // 线路名称文本提取
-        list_text:"source&&label",       // 单集的集数名称
-        list_url:"source&&src",         // 单集播放链接
-        "重定向":""// 拿到详情html之后执行js，可以返回新html
-    },
+二级:`js:
+// MY_URL 就是二级拿到的待访问页面链接
+log("二级拿到的MY_URL="+MY_URL);
+
+// 如果你这里不需要再去拉页面，直接return这个url就完事
+let result_url = MY_URL;
+
+// 如果你需要请求页面、正则/xpath在页面里面抓出真实播放url，你就写:
+// let html = getHtml(MY_URL);
+// result_url = pdh(html,"a","href"); //自己改成你提取链接逻辑
+
+log("二级最终输出url="+result_url);
+return result_url;
+`,
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
