@@ -3,10 +3,10 @@ var rule = {
     host:'https://www.fullhd.to',
     homeUrl:'/zh',
     url:'/fyclass/fypage/[/fyclass/]',
-    searchUrl:'/search/**',
+    searchUrl:'/search/**/',
     searchable:2,
     headers:{
-        'User-Agent':'MOBILE_UA'
+        'User-Agent':'MOBILE_UA#Accept$text/html#accept-language$zh-CN,zh;q=0.8'
     },
     timeout:5000,
     class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
@@ -59,9 +59,18 @@ while(true){
             // ⚠️务必替换为站点真实图片URL模板
             if(objId){
                 imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
+    // 请求图片，带上referer
+    let imgBin = getBinary(imgSrc, {
+        headers:{
+            "Referer":"https://www.fullhd.to"
+        }
+    })
+    // 二进制转 base64
+    let b64 = toBase64(imgBin);
+    //vod_pic = "data:image/jpeg;base64," + b64;
             }
         }
-        // duration（完全保留你原来这一段，未做修改）
+        // duration（副标题）
         let mDur = aBlock.match(/<span class="duration">(。*)span>/);
         let dur = "";
         if(mDur){
@@ -69,8 +78,8 @@ while(true){
         }
         arr.push({
             vod_name: title,
-            vod_pic: imgSrc,
-            vod_remarks: objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg",
+            vod_pic: "data:image/jpeg;base64," + b64,
+            vod_remarks: b64.length,
             vod_id:href
         });
     }
