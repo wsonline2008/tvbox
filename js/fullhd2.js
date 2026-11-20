@@ -5,7 +5,7 @@ var rule = {
     url:'/fyclass/fypage/[/fyclass/]',
     searchUrl:'/search/**/',
     searchable:2,
-    headers:'User-Agent$MOBILE_UA#Accept$text/html#accept-language$zh-CN,zh;q=0.8',
+    headers:'User-Agent$MOBILE_UA#Accept$text/html/jpg#accept-language$zh-CN,zh;q=0.8',
     timeout:5000,
     class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
     class_name:'最新&最佳&热门&Brazzers&Tushy&NaughtyA&Sexmex&Passion&动画&18岁&丰臀女孩&丁字裤&丝袜&日本未审查&连裤袜',
@@ -56,7 +56,7 @@ while(true){
             }
             // ⚠️务必替换为站点真实图片URL模板
             if(objId){
-                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/medium/1.jpg";
+                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
     // 请求图片，带上referer
     //let imgBin = getBinary(imgSrc);//, {
     //    headers:{
