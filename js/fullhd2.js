@@ -108,14 +108,14 @@ VODS = arr;
     //二级:';;;;;video;source&&label;source&&src',
 二级:{
     title: "",
-    img: "//video/@poster",
+    img: "video&&poster",
     desc: "",
     content:"",
-    tabs:"//video/source",
-    lists:"./fake_ep",   // 去当前source内部找我们JS生成的fake_ep节点作为剧集
-    tab_text:"./@label",
+    tabs:"source",
+    lists:"fake_ep",   // 去当前source内部找我们JS生成的fake_ep节点作为剧集
+    tab_text:"source&&label",
     list_text:"正片",
-    list_url:"./@fake_src",
+    list_url:"fake_ep&&fake_src",
     "重定向":`
         //JS：遍历所有source，在source内部增加fake_ep，把src放到fake_src属性
         let arr = $("source");
