@@ -1,87 +1,35 @@
 var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to',
-    homeUrl:'https://www.fullhd.to/zh',
-    url:'/zh/fyclass/fypage/',
-    detailUrl:'',
-    searchUrl:'',
-    searchable:0,
-    headers:{
-        'User-Agent':'MOBILE_UA',
-        'Accept':'text/html',
-        'accept-language':'zh-CN,zh;q=0.8'
-    },
+    //homeUrl:'/zh',
+    url:'/fyclass/fypage/[/fyclass/]',
+    searchUrl:'/search/**/',
+    searchable:2,
+    headers:'User-Agent$MOBILE_UA#Referer$https://www.fullhd.to#Accept$text/html,image/jpeg,*/*#Accept-Language$zh-CN,zh;q=0.8',
     timeout:5000,
-    // 硬编码分类：最新&最佳&热门 对应标识 latest‑updates&top‑rated&most‑popular
-    class_name:'最新&最佳&热门',
-    class_url:'latest-updates&top-rated&most-popular',
-    cate_exclude:'',
-    // 首页推荐 js模式，a.thumb_img数组，图片通过href正则拼接
-    推荐:'js:{\
-        let htmlText = getHtml(MY_URL);\
-        let $ = html(htmlText);\
-        let arr = [];\
-        $("a.thumb_img").each((i,el)=>{\
-            let title = $(el).attr("title")||"";\
-            let detUrl = $(el).attr("href")||"";\
-            let vod_remarks = $(el).find("span.duration").text()||"";\
-            vod_remarks = vod_remarks.replace("完整视频","时长");\
-            let pic = "";\
-            let m = detUrl.match(/videos\\/(\\d+)/);\
-            if(m){\
-                let vid = m[1];\
-                let dir1 = Math.floor(Number(vid)/10000)*10000;\
-                pic = `https://img.fullhd.to/${dir1}/${vid}/small/1.jpg`;\
-            }\
-            arr.push({vod_name:title,vod_id:detUrl,vod_pic:pic,vod_remarks:vod_remarks});\
-        });\
-        VODS = arr;\
-    }',
+    class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
+    class_name:'最新&最佳&热门&Brazzers&Tushy&NaughtyA&Sexmex&Passion&动画&18岁&丰臀女孩&丁字裤&丝袜&日本未审查&连裤袜',
+    //class_name:'#page-viewport&&ul&&li;.text&&Text;a&&href;/(.*)',
+    cate_exclude:'应用',
+    //推荐:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;a&&href',
     double:false,
-    limit:20,
-    // 一级分类列表 js模式
-    一级:'js:{\
-        let htmlText = getHtml(MY_URL);\
-        let $ = html(htmlText);\
-        let arr = [];\
-        $("a.thumb_img").each((i,el)=>{\
-            let title = $(el).attr("title")||"";\
-            let detUrl = $(el).attr("href")||"";\
-            let vod_remarks = $(el).find("span.duration").text()||"";\
-            vod_remarks = "时长"+vod_remarks;\
-            let pic = "";\
-            let m = detUrl.match(/videos\\/(\\d+)/);\
-            if(m){\
-                let vid = m[1];\
-                let dir1 = Math.floor(Number(vid)/10000)*10000;\
-                pic = `https://img.fullhd.to/${dir1}/${vid}/small/1.jpg`;\
-            }\
-            arr.push({vod_name:title,vod_id:detUrl,vod_pic:pic,vod_remarks:vod_remarks});\
-        });\
-        VODS = arr;\
-    }',
-    // 二级详情 js模式，解析video>source选集，反转选集顺序
-    二级:'js:{\
-        let htmlText = getHtml(MY_URL);\
-        let $ = html(htmlText);\
-        let playFrom = ["默认线路"];\
-        let playUrlList = [];\
-        $("video source").each((i,el)=>{\
-            let label = $(el).attr("label")||`第${i+1}集`;\
-            let src = $(el).attr("src")||"";\
-            playUrlList.push(`${label}$${src}`);\
-        });\
-        playUrlList = playUrlList.reverse();\
-        VOD = {\
-            vod_name:"",\
-            vod_content:"",\
-            vod_play_from:playFrom.join("$$$"),\
-            vod_play_url:playUrlList.join("#")\
-        };\
-    }',
-    // 原配置无搜索，返回空列表
-    搜索:'js:{VODS=[];}',
+    limit:50,
     play_parse:false,
-    sniffer:false,
-    isVideo:".mp4#.m3u8#.flv#video/tos"
+    一级:'a.thumb_img;&&title;img&&data-src;span.duration&&Text;href',
+    推荐:"*",
+    //二级:';;;;;video;source&&label;source&&src',
+    二级:{
+        title: "1",          // 片名选择器
+        img: "video&&poster",       // 详情页封面
+        desc: "类型",
+        content:"简介",     // 简介
+        tabs:"video",       // 线路/标签外层容器
+        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+        tab_text:"线路",      // 线路名称文本提取
+        list_text:"source&&label",       // 单集的集数名称
+        list_url:"source&&src",         // 单集播放链接
+        "重定向":""
+    },
+
+    搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
