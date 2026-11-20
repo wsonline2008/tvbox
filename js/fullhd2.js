@@ -112,7 +112,7 @@ VODS = arr;
     desc: "",
     content:"",
     tabs:"source",                // tabs选中全部source数组 → 每一个source就是【一条独立线路】
-    lists:"this",                 // 当前tab(单个source)本身作为剧集容器，本条线路下面就一集
+    lists:"source",                 // 当前tab(单个source)本身作为剧集容器，本条线路下面就一集
     tab_text:"source&&label",    // ✅ 线路名称：清晰度，放到多线路！！这就是你想要的
     list_text:"正片",             // ✅ 剧集名称固定全部写【正片】，只有这一集
     list_url:"source&&src",      // ✅ 播放地址取自当前source的src
