@@ -106,20 +106,17 @@ VODS = arr;
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
-二级:`js:
-//log("二级最小测试，无getHtml");
-let vod = {
-    title:"测试影片",
-    img:"https://via.placeholder.com/300x200.jpg",
-    vod_play_data:[
-        {
-            name:"测试线路",
-            urls:"正片$https://www.w3schools.com/html/mov_bbb.mp4"
-        }
-    ]
-};
-//log("返回vod对象："+JSON.stringify(vod));
-return vod;
-`,
+二级:{
+    title: "video&&@title",
+    img: "video&&poster",
+    desc: "",
+    content:"",
+    tabs:"source",                // tabs选中全部source数组 → 每一个source就是【一条独立线路】
+    lists:"this",                 // 当前tab(单个source)本身作为剧集容器，本条线路下面就一集
+    tab_text:"source&&@label",    // ✅ 线路名称：清晰度，放到多线路！！这就是你想要的
+    list_text:"正片",             // ✅ 剧集名称固定全部写【正片】，只有这一集
+    list_url:"source&&@src",      // ✅ 播放地址取自当前source的src
+    "重定向":""
+},
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
