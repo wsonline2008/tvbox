@@ -96,111 +96,87 @@ VODS = arr;
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
-    //二级:{
-     //   title: "1",          // 片名选择器
-     //   img: "video&&poster",       // 详情页封面
-     //   desc: "类型",
-     //   content:"简介",     // 简介
-     //   tabs:"video",       // 线路/标签外层容器
-     //   lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-     //   tab_text:"线路",      // 线路名称文本提取
-     //   list_text:"source&&label",       // 单集的集数名称
-     //   list_url:"source&&src",         // 单集播放链接
-     //   重定向:""             // 拿到详情html之后执行js，可以返回新html
-    //},
-二级:`js:
-    let detailHtml = getHtml(MY_URL);
-    let baseHost = "https://www.fullhd.to"; //改成你的站点host
+    二级:{
+        title: "1",          // 片名选择器
+        img: "video&&poster",       // 详情页封面
+        desc: "类型",
+        content:"简介",     // 简介
+        tabs:"video",       // 线路/标签外层容器
+        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+        tab_text:"线路",      // 线路名称文本提取
+        list_text:"source&&label",       // 单集的集数名称
+        list_url:"source&&src",         // 单集播放链接
+        "重定向":`
+let baseHost = "https://www.fullhd.to";
 
-    // 1.截取video整块html
-    let videoStart = detailHtml.indexOf("<video");
-    let videoEnd = detailHtml.indexOf("</video>", videoStart);
-    let videoHtml = "";
-    if(videoStart !== -1 && videoEnd !== -1){
-        videoHtml = detailHtml.substring(videoStart, videoEnd + "</video>".length);
+// 截取video块，detailHtml = 当前这个详情页面（引擎已经抓取完成！！）
+let videoStart = detailHtml.indexOf("<video");
+let videoEnd = detailHtml.indexOf("</video>", videoStart);
+let videoHtml = "";
+if(videoStart !== -1 && videoEnd !== -1){
+    videoHtml = detailHtml.substring(videoStart, videoEnd + "</video>".length);
+}
+
+// while循环抓取全部source标签
+let sourceList = [];
+let searchIdx = 0;
+while(true){
+    let sStart = videoHtml.indexOf("<source", searchIdx);
+    if(sStart === -1) break;
+    let sEnd = videoHtml.indexOf(">", sStart);
+    if(sEnd === -1) break;
+    let sourceTag = videoHtml.substring(sStart, sEnd+1);
+
+    let label = "";
+    let labPos = sourceTag.indexOf('label="');
+    if(labPos !== -1){
+        let lS = labPos + 'label="'.length;
+        let lE = sourceTag.indexOf('"', lS);
+        if(lE !== -1) label = sourceTag.substring(lS,lE);
     }
-
-    // 2.提取video poster（详情封面图）
-    let poster = "";
-    let posterPos = videoHtml.indexOf('poster="');
-    if(posterPos !== -1){
-        let pStart = posterPos + 'poster="'.length;
-        let pEnd = videoHtml.indexOf('"', pStart);
-        if(pEnd !== -1){
-            poster = videoHtml.substring(pStart, pEnd);
-            if(poster && !poster.startsWith("http")){
-                poster = baseHost + poster;
-            }
+    let src = "";
+    let srcPos = sourceTag.indexOf('src="');
+    if(srcPos !== -1){
+        let sS = srcPos + 'src="'.length;
+        let sE = sourceTag.indexOf('"', sS);
+        if(sE !== -1) src = sourceTag.substring(sS,sE);
+        if(src && !src.startsWith("http")){
+            src = baseHost + src;
         }
     }
-
-    // 3.while循环抓取全部source标签（和你一级抓取条目写法一模一样！）
-    let sourceList = [];
-    let searchIdx = 0;
-    while(true){
-        let sStart = videoHtml.indexOf("<source", searchIdx);
-        if(sStart === -1) break;
-        let sEnd = videoHtml.indexOf(">", sStart);
-        if(sEnd === -1) break;
-        let sourceTag = videoHtml.substring(sStart, sEnd+1);
-
-        // 提取 label
-        let label = "";
-        let labPos = sourceTag.indexOf('label="');
-        if(labPos !== -1){
-            let lS = labPos + 'label="'.length;
-            let lE = sourceTag.indexOf('"', lS);
-            if(lE !== -1) label = sourceTag.substring(lS,lE);
-        }
-        // 提取 src
-        let src = "";
-        let srcPos = sourceTag.indexOf('src="');
-        if(srcPos !== -1){
-            let sS = srcPos + 'src="'.length;
-            let sE = sourceTag.indexOf('"', sS);
-            if(sE !== -1) src = sourceTag.substring(sS,sE);
-            if(src && !src.startsWith("http")){
-                src = baseHost + src;
-            }
-        }
-        if(label && src){
-            sourceList.push({
-                label: label,
-                src: src
-            })
-        }
-        searchIdx = sEnd + 1;
+    if(label && src){
+        sourceList.push({label:label, src:src})
     }
+    searchIdx = sEnd + 1;
+}
 
-    // 4.清晰度权重排序：480p优先→720p→1080p
-    const qWeight = {
-        "480p":1,
-        "720p":2,
-        "1080p":3
-    };
-    sourceList.forEach(item=>{
-        let key = Object.keys(qWeight).find(k=> item.label.toLowerCase().includes(k));
-        item.weight = key ? qWeight[key] : 999;
-    })
-    sourceList.sort((a,b)=> a.weight - b.weight);
+// =========核心：按清晰度顺序收集【480p→720p→1080p】=========
+let resultList = [];
+let queue = ["480p", "720p", "1080p"];
+for(let q of queue){
+    for(let item of sourceList){
+        if(item.label.toLowerCase().includes(q.toLowerCase())){
+            resultList.push(item);
+            // break; // 如果需要：同一个清晰度只取第一条，取消这行注释
+        }
+    }
+}
+let urlsStr = resultList.map(x=> `${x.label}$${x.src}`).join("#");
 
-    // 拼装引擎需要的选集字符串： label$src#label$src
-    let urlsStr = sourceList.map(x=> `${x.label}$${x.src}`).join("#");
+// 返回二级结果，补空title防止引擎字段校验报错
+let vodDetail = {
+    title:"",
+    vod_play_data:[
+        {
+            name:"线路",
+            urls:urlsStr
+        }
+    ]
+};
+return vodDetail;
+`
+// 拿到详情html之后执行js，可以返回新html
+    },
 
-    // 返回整套二级vod详情对象
-    let vodDetail = {
-        title:"待替换标题", //后续在这里增加代码从detailHtml截取真实片名
-        img: poster,
-        desc:"待替换类型",  //类型
-        content:"待替换简介",//简介
-        vod_play_data:[
-            {
-                name:"线路",
-                urls:urlsStr
-            }
-        ]
-    };
-    return vodDetail;
-`,
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
