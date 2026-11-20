@@ -56,7 +56,7 @@ while(true){
             }
             // ⚠️务必替换为站点真实图片URL模板
             if(objId){
-                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
+                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/medium@2x/1.jpg";
     // 请求图片，带上referer
     //let imgBin = getBinary(imgSrc);//, {
     //    headers:{
@@ -81,7 +81,7 @@ while(true){
         arr.push({
             vod_name: title,
             vod_pic: imgSrc,
-            vod_remarks: MY_URL,
+            vod_remarks: dur,
             vod_id:href
         });
     }
