@@ -108,21 +108,23 @@ VODS = arr;
     //二级:';;;;;video;source&&label;source&&src',
 二级:{
     title: "",
-    img: "video&&poster",
-    desc: "",
-    content:"",
-    tabs:"source",
-    lists:"fake_ep",   // 去当前source内部找我们JS生成的fake_ep节点作为剧集
-    tab_text:"source&&label",
-    list_text:"正片",
-    list_url:"fake_ep&&fake_src",
-    "重定向":`
-        //JS：遍历所有source，在source内部增加fake_ep，把src放到fake_src属性
-        let arr = $("source");
-        arr.each(function(){
-            let src = $(this).attr("src");
-            $(this).append('<fake_ep fake_src="'+src+'"></fake_ep>');
+        img: "video&&poster",       // 详情页封面
+        desc: "类型",
+        content:"简介",     // 简介
+        tabs:"video",       // 线路/标签外层容器
+        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
+        tab_text:"线路",      // 线路名称文本提取
+        list_text:"source&&label",       // 单集的集数名称
+        list_url:"source&&src",         // 单集播放链接
+        "重定向":`
+        //【测试代码：遍历全部source，强行修改label值！！】
+        console.log("====重定向JS开始执行====");
+        let sourceList = $("source");
+        sourceList.each(function(index,el){
+            // 强行修改label，统一改成：测试清晰度_第N条
+            $(el).attr("label","测试清晰度_"+index);
         });
+        console.log("====重定向JS执行完毕，返回新html====");
         return $("html").html();
     `
 },
