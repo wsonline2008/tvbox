@@ -161,7 +161,17 @@ for(let q of queue){
         }
     }
 }
-let urlsStr = resultList.map(x=> `${x.label}$${x.src}`).join("#");
+// ✅ 替换：纯for循环，无map！！
+let urlsStr = "";
+for(let i=0;i<resultList.length;i++){
+    let item = resultList[i];
+    let temp = item.label + "$" + item.src;
+    if(i===0){
+        urlsStr = temp;
+    }else{
+        urlsStr = urlsStr + "#" + temp;
+    }
+}
 
 // 返回二级结果，补空title防止引擎字段校验报错
 let vodDetail = {
