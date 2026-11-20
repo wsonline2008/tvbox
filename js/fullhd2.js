@@ -5,7 +5,7 @@ var rule = {
     url:'/fyclass/fypage/[/fyclass/]',
     searchUrl:'/search/**/',
     searchable:2,
-    headers:'User-Agent$MOBILE_UA#Referer$https://www.fullhd.to#Accept$text/html/jpg#accept-language$zh-CN,zh;q=0.8',
+    headers:'User-Agent$MOBILE_UA#Referer$https://www.fullhd.to#Accept$text/html,image/jpeg,*/*#Accept-Language$zh-CN,zh;q=0.8',
     timeout:5000,
     class_url:'latest-updates&top-rated&most-popular&networks/brazzers-com&networks/tushy-com&networks/naughtyamerica-com&sites/sexmex&sites/passion-hd&categories/animation&categories/18-years-old&categories/pawg&categories/thong&categories/stockings&categories/jav-uncensored&categories/pantyhose',
     class_name:'最新&最佳&热门&Brazzers&Tushy&NaughtyA&Sexmex&Passion&动画&18岁&丰臀女孩&丁字裤&丝袜&日本未审查&连裤袜',
@@ -108,7 +108,6 @@ VODS = arr;
         list_url:"source&&src",         // 单集播放链接
         "重定向":`
 let baseHost = "https://www.fullhd.to";
-
 // 截取video块，detailHtml = 当前这个详情页面（引擎已经抓取完成！！）
 let videoStart = detailHtml.indexOf("<video");
 let videoEnd = detailHtml.indexOf("</video>", videoStart);
@@ -116,7 +115,6 @@ let videoHtml = "";
 if(videoStart !== -1 && videoEnd !== -1){
     videoHtml = detailHtml.substring(videoStart, videoEnd + "</video>".length);
 }
-
 // while循环抓取全部source标签
 let sourceList = [];
 let searchIdx = 0;
@@ -149,10 +147,9 @@ while(true){
     }
     searchIdx = sEnd + 1;
 }
-
 // =========核心：按清晰度顺序收集【480p→720p→1080p】=========
 let resultList = [];
-let queue = ["480p", "720p", "1080p"];
+let queue = ["480p", "720p", "1080p", "2160p"];
 for(let q of queue){
     for(let item of sourceList){
         if(item.label.toLowerCase().includes(q.toLowerCase())){
