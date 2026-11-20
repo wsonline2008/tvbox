@@ -89,7 +89,7 @@ if(pos !== -1){
         }
         arr.push({
             vod_name: title,
-            vod_pic: imgSrc,
+            vod_pic: "https://resource-cdn.tuxiaobei.com/video/FmS-d8yL4S4JoWnltNGRG58iPHxl.jpg",
             vod_remarks: dur,
             vod_id:href
         });
@@ -99,7 +99,6 @@ if(pos !== -1){
 }
 VODS = arr;
 `,
-
     double:false,
     limit:50,
     //play_parse:true,
