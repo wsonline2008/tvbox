@@ -1,7 +1,7 @@
 var rule = {
     title:'fullhd',
     host:'https://www.fullhd.to',
-    homeUrl:'/zh',
+    //homeUrl:'/zh',
     url:'/fyclass/fypage/[/fyclass/]',
     searchUrl:'/search/**/',
     searchable:2,
@@ -76,7 +76,16 @@ while(true){
                     if(dur.length > 3){
                         dur = dur.substring(0, dur.length - 2);
                     }
-            //dur = mDur[1].substring(1, mDur[1].length - 2);
+let keyword = "Full Video";
+let pos = dur.indexOf(keyword);
+if(pos !== -1){
+    // 截取 Full Video 之后的全部字符串
+    dur = dur.substring(pos + keyword.length);
+    // 可选：清理开头多余空格，优化显示效果
+    while(dur.length > 0 && dur.charAt(0) === " "){
+        dur = dur.substring(1);
+    }
+}
         }
         arr.push({
             vod_name: title,
@@ -173,39 +182,45 @@ while(true){
     }
     searchIdx = sEnd + 1;
 }
-// =========核心：按清晰度顺序收集【480p→720p→1080p】=========
+// =========核心：按清晰度顺序收集【480p→720p→1080p】，去重避免同一个视频源多次加入=========
 let resultList = [];
 let queue = ["480p", "720p", "1080p", "2160p"];
-for(let q of queue){
-    for(let item of sourceList){
-        if(item.label.toLowerCase().includes(q.toLowerCase())){
-            resultList.push(item);
-            // break; // 如果需要：同一个清晰度只取第一条，取消这行注释
+for(let q=0; q < queue.length; q++){
+    let targetKey = queue[q];
+    for(let i=0; i < sourceList.length; i++){
+        let item = sourceList[i];
+        // 判断是否已经添加过这个item，防止重复压入
+        let alreadyHas = false;
+        for(let k=0;k<resultList.length;k++){
+            if(resultList[k] === item){
+                alreadyHas = true;
+                break;
+            }
         }
-    }
-}
-// ✅ 替换：纯for循环，无map！！
-let urlsStr = "";
-for(let i=0;i<resultList.length;i++){
-    let item = resultList[i];
-    let temp = item.label + "$" + item.src;
-    if(i===0){
-        urlsStr = temp;
-    }else{
-        urlsStr = urlsStr + "#" + temp;
+        if(alreadyHas) continue;
+
+        if(item.label.toLowerCase().indexOf(targetKey.toLowerCase()) !== -1){
+            resultList.push(item);
+        }
     }
 }
 
-// 返回二级结果，补空title防止引擎字段校验报错
+// ✅【重点改造：每一条清晰度生成一条独立线路！！不再拼接成单条urls，适配changeable换源切换清晰度】
+let vod_play_data = [];
+for(let i=0;i<resultList.length;i++){
+    let item = resultList[i];
+    let oneLine = {
+        name: item.label,
+        urls: "正片$" + item.src
+    };
+    vod_play_data.push(oneLine);
+}
+
+// =========返回结果，如果你需要remark，在这里增加remark字段：remark:remark=========
 let vodDetail = {
     title:"",
     img: pic,
-    vod_play_data:[
-        {
-            name:"线路",
-            urls:urlsStr
-        }
-    ]
+    vod_play_data: vod_play_data
 };
 return vodDetail;
 `
