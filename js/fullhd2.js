@@ -40,6 +40,7 @@ while(true){
         }
         // ========== 从href路径 /videos/后面截取数字ID，切掉末尾3位 ==========
         let objId = "";
+        let objId2 = "";
         let imgSrc = "";
         if(href){
             let key = "/videos/";
@@ -49,14 +50,14 @@ while(true){
                 let ePos = href.indexOf("/", idStart);
                 if(ePos !== -1){
                     objId = href.substring(idStart, ePos);
-                    //if(objId.length >= 3){
-                    //    objId = objId.substring(0, objId.length - 3);
-                    //}
+                    if(objId.length >= 3){
+                        objId2 = objId.substring(0, objId.length - 3);
+                    }
                 }
             }
             // ⚠️务必替换为站点真实图片URL模板
             if(objId){
-                imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
+                imgSrc = "https://img.fullhd.to/"+objId2+"000/"+objId+"/small/1.jpg";
     // 请求图片，带上referer
     //let imgBin = getBinary(imgSrc);//, {
     //    headers:{
@@ -90,7 +91,7 @@ if(pos !== -1){
         arr.push({
             vod_name: title,
             vod_pic: "https://resource-cdn.tuxiaobei.com/video/FmS-d8yL4S4JoWnltNGRG58iPHxl.jpg",
-            vod_remarks: dur,
+            vod_remarks: imgSrc.length,
             vod_id:href
         });
     }
