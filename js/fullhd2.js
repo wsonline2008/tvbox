@@ -63,13 +63,13 @@ while(true){
             if(objId){
                 imgSrc = "https://img.fullhd.to/"+objId.substring(0, objId.length - 3)+"000/"+objId+"/small/1.jpg";
     // 请求图片，带上referer
-    //let imgBin = getBinary(imgSrc, {
+    let imgBin = getBinary(imgSrc);//, {
     //    headers:{
    //         "Referer":"https://www.fullhd.to"
     //    }
     //})
     // 二进制转 base64
-    //let b64 = toBase64(imgBin);
+    let b64 = toBase64(imgBin);
     //vod_pic = "data:image/jpeg;base64," + b64;
             }
         }
