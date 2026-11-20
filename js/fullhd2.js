@@ -98,47 +98,34 @@ if(pos !== -1){
     searchPos = posAEnd + 4;
 }
 VODS = arr;
-`,
-    double:false,
-    limit:50,
-    play_parse:true,
-    //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
-    推荐:"*",
-    //二级:';;;;;video;source&&label;source&&src',
-// 这一段写在你的 rule = { 里面的 lazy:"这里！！" }
-// 注意：drpy lazy里面，log()打印，不要直接console.log；网页请求函数确认是 request / getHtml
-lazy:`
-log("==== drpy lazy开始执行 ====");
+
+// ========== 你一级现有代码，最终得到这个url（详情=播放页） ==========
+let url = href; 
+log("===== 开始解析页面，url：" + url);
 let vodDetail = {
     title:"",
     img:"",
     vod_play_data:[]
 };
-// input 就是lazy传入的url（播放页/跳转页地址，drpy自带）
-let playPageUrl = input;
-if(!playPageUrl || playPageUrl.indexOf("http")!==0){
-    log("❌ lazy input不是有效url");
-    return setResult(vodDetail);
-}
-// 请求拿到播放页面html，这里换成你环境可用的拉页函数 getHtml / request
-let playHtml = "";
+
+let pageHtml = "";
 try{
-    playHtml = getHtml(playPageUrl);
+    pageHtml = getHtml(url);
 }catch(e){
-    log("❌ getHtml 请求失败："+e);
-    return setResult(vodDetail);
+    log("❌ getHtml 请求异常：" + e);
+    return vodDetail;
 }
-if(!playHtml){
-    log("❌ playHtml为空");
-    return setResult(vodDetail);
+if(!pageHtml){
+    log("❌ pageHtml为空");
+    return vodDetail;
 }
 
-let baseHost = "https://www.fullhd.to";
-let videoStart = playHtml.indexOf("<video");
-let videoEnd = playHtml.indexOf("</video>", videoStart);
+let baseHost = "https://www.fullhd.to"; // 修改为你的站点域名
+let videoStart = pageHtml.indexOf("<video");
+let videoEnd = pageHtml.indexOf("</video>", videoStart);
 let videoHtml = "";
 if(videoStart !== -1 && videoEnd !== -1){
-    videoHtml = playHtml.substring(videoStart, videoEnd + "</video>".length);
+    videoHtml = pageHtml.substring(videoStart, videoEnd + "</video>".length);
 }
 
 // 抓取poster图片
@@ -197,9 +184,9 @@ while(true){
     searchIdx = sEnd + 1;
 }
 
-// 修复去重，对比src去重
+// 修复去重逻辑，对比src去重
 let resultList = [];
-let queue = ["480p", "720p", "1080p", "2160p"];
+let queue = ["480p", "720p", "1080p", "2160p"]; // ⚠️改成页面source里面真实的文字！！
 for(let q=0; q < queue.length; q++){
     let targetKey = queue[q];
     for(let i=0; i < sourceList.length; i++){
@@ -229,21 +216,17 @@ for(let i=0;i<resultList.length;i++){
     vod_play_data.push(oneLine);
 }
 vodDetail.vod_play_data = vod_play_data;
-// drpy 提交结果！！setResult
-setResult(vodDetail);
+
+// 最终返回
+return vodDetail;
+
 `,
-   二级:{
-        title: "1",          // 片名选择器
-        img: "video&&poster",       // 详情页封面
-        desc: "类型",
-        content:"简介",     // 简介
-        tabs:"video",       // 线路/标签外层容器
-        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-        tab_text:"线路",      // 线路名称文本提取
-        list_text:"source&&label",       // 单集的集数名称
-        list_url:"source&&src",         // 单集播放链接
-        "重定向":""// 拿到详情html之后执行js，可以返回新html
-    },
+    double:false,
+    limit:50,
+    play_parse:true,
+    //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
+    推荐:"*",
+    //二级:';;;;;video;source&&label;source&&src',
 
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
