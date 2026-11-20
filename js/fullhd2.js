@@ -101,30 +101,47 @@ VODS = arr;
 `,
     double:false,
     limit:50,
-    play_parse:false,
+    play_parse:true,
     //一级:'a.thumb_img;pd(this,"&&title","测试标题");img&&src;span.duration&&Text;href',
     推荐:"*",
     //二级:';;;;;video;source&&label;source&&src',
-    二级:{
-        title: "1",          // 片名选择器
-        img: "video&&poster",       // 详情页封面
-        desc: "类型",
-        content:"简介",     // 简介
-        tabs:"video",       // 线路/标签外层容器
-        lists:"source",   // 每一条线路对应的选集容器，#id会自动替换线路下标
-        tab_text:"线路",      // 线路名称文本提取
-        list_text:"source&&label",       // 单集的集数名称
-        list_url:"source&&src",         // 单集播放链接
-        "重定向":`
+// 这一段写在你的 rule = { 里面的 lazy:"这里！！" }
+// 注意：drpy lazy里面，log()打印，不要直接console.log；网页请求函数确认是 request / getHtml
+lazy:`
+log("==== drpy lazy开始执行 ====");
+let vodDetail = {
+    title:"",
+    img:"",
+    vod_play_data:[]
+};
+// input 就是lazy传入的url（播放页/跳转页地址，drpy自带）
+let playPageUrl = input;
+if(!playPageUrl || playPageUrl.indexOf("http")!==0){
+    log("❌ lazy input不是有效url");
+    return setResult(vodDetail);
+}
+// 请求拿到播放页面html，这里换成你环境可用的拉页函数 getHtml / request
+let playHtml = "";
+try{
+    playHtml = getHtml(playPageUrl);
+}catch(e){
+    log("❌ getHtml 请求失败："+e);
+    return setResult(vodDetail);
+}
+if(!playHtml){
+    log("❌ playHtml为空");
+    return setResult(vodDetail);
+}
+
 let baseHost = "https://www.fullhd.to";
-// 截取video块，detailHtml = 当前这个详情页面（引擎已经抓取完成！！）
-let videoStart = detailHtml.indexOf("<video");
-let videoEnd = detailHtml.indexOf("</video>", videoStart);
+let videoStart = playHtml.indexOf("<video");
+let videoEnd = playHtml.indexOf("</video>", videoStart);
 let videoHtml = "";
 if(videoStart !== -1 && videoEnd !== -1){
-    videoHtml = detailHtml.substring(videoStart, videoEnd + "</video>".length);
+    videoHtml = playHtml.substring(videoStart, videoEnd + "</video>".length);
 }
-// =========新增：抓取video poster封面图片=========
+
+// 抓取poster图片
 let pic = "";
 let posterKey = 'poster="';
 let pStart = videoHtml.indexOf(posterKey);
@@ -133,22 +150,19 @@ if(pStart !== -1){
     let pEnd = videoHtml.indexOf('"', pStart);
     if(pEnd !== -1){
         pic = videoHtml.substring(pStart, pEnd);
-        // 如果图片是相对路径，拼接baseHost
         if(pic && pic.indexOf("http") !== 0){
             pic = baseHost + pic;
         }
-// ✅【超兼容版本，只用 indexOf、substring，不依赖高阶函数，推荐！】
-if(pic !== ""){
-    var findStr = "medium@2x";
-    var pos = pic.indexOf(findStr);
-    if(pos !== -1){
-        var left = pic.substring(0, pos);
-        var right = pic.substring(pos + findStr.length);
-        pic = left + "small" + right;
+        var findStr = "medium@2x";
+        var pos = pic.indexOf(findStr);
+        if(pos !== -1){
+            var left = pic.substring(0, pos);
+            var right = pic.substring(pos + findStr.length);
+            pic = left + "small" + right;
+        }
     }
 }
-    }
-}
+vodDetail.img = pic;
 
 // while循环抓取全部source标签
 let sourceList = [];
@@ -173,23 +187,23 @@ while(true){
         let sS = srcPos + 'src="'.length;
         let sE = sourceTag.indexOf('"', sS);
         if(sE !== -1) src = sourceTag.substring(sS,sE);
-        if(src && !src.startsWith("http")){
+        if(src && src.indexOf("http") !== 0){
             src = baseHost + src;
         }
     }
-    if(label && src){
-        sourceList.push({label:label, src:src})
+    if(label !== "" && src !== ""){
+        sourceList.push({label:label, src:src});
     }
     searchIdx = sEnd + 1;
 }
-// =========核心：按清晰度顺序收集【480p→720p→1080p】，去重避免同一个视频源多次加入=========
+
+// 修复去重，对比src去重
 let resultList = [];
 let queue = ["480p", "720p", "1080p", "2160p"];
 for(let q=0; q < queue.length; q++){
     let targetKey = queue[q];
     for(let i=0; i < sourceList.length; i++){
         let item = sourceList[i];
-        // 判断是否已经添加过这个视频src，防止重复压入【修复！！！】
         let alreadyHas = false;
         for(let k=0;k<resultList.length;k++){
             if(resultList[k].src === item.src){
@@ -198,13 +212,13 @@ for(let q=0; q < queue.length; q++){
             }
         }
         if(alreadyHas) continue;
-
         if(item.label.toLowerCase().indexOf(targetKey.toLowerCase()) !== -1){
             resultList.push(item);
         }
     }
 }
-// ✅【重点改造：每一条清晰度生成一条独立线路！！不再拼接成单条urls，适配changeable换源切换清晰度】
+
+// 生成多线路vod_play_data
 let vod_play_data = [];
 for(let i=0;i<resultList.length;i++){
     let item = resultList[i];
@@ -214,17 +228,11 @@ for(let i=0;i<resultList.length;i++){
     };
     vod_play_data.push(oneLine);
 }
-
-// =========返回结果，如果你需要remark，在这里增加remark字段：remark:remark=========
-let vodDetail = {
-    title:"",
-    img: pic,
-    vod_play_data: vod_play_data
-};
-return vodDetail;
-`
-// 拿到详情html之后执行js，可以返回新html
-    },
+vodDetail.vod_play_data = vod_play_data;
+// drpy 提交结果！！setResult
+setResult(vodDetail);
+`,
+ 二级:'*',
 
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
