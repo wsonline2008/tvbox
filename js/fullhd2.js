@@ -111,12 +111,20 @@ VODS = arr;
     img: "//video/@poster",
     desc: "",
     content:"",
-    tabs:"//video/source",        // tabs一次性选中全部source，生成线路数组，1个source=1条线路
-    lists:".",                    // ✅ XPath "." = 当前节点本身！！替代this，选中当前循环到的source作为lists容器
-    tab_text:"./@label",          // 在当前source取label，作为线路名称（清晰度放在多线路！！）
-    list_text:"正片",             // 剧集固定写正片，只有一集
-    list_url:"./@src",            // 在当前source取src播放地址
-    "重定向":""
+    tabs:"//video/source",
+    lists:"./fake_ep",   // 去当前source内部找我们JS生成的fake_ep节点作为剧集
+    tab_text:"./@label",
+    list_text:"正片",
+    list_url:"./@fake_src",
+    "重定向":`
+        //JS：遍历所有source，在source内部增加fake_ep，把src放到fake_src属性
+        let arr = $("source");
+        arr.each(function(){
+            let src = $(this).attr("src");
+            $(this).append('<fake_ep fake_src="'+src+'"></fake_ep>');
+        });
+        return $("html").html();
+    `
 },
     搜索:'a.thumb_img;&&title;img&&src;span.duration&&Text;&&href',
 }
