@@ -72,10 +72,10 @@ class Spider(Spider):
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
-                "vod_pic": self.getPicS(img_src),//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
+                "vod_pic": self.getPicS(img_src),#//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
                 "vod_remarks": duration
             })
-        //pager = rsp('ul.pager.dx-pager')
+        #//pager = rsp('ul.pager.dx-pager')
         limit = 30
         total = 99999
         return {
@@ -153,10 +153,10 @@ class Spider(Spider):
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
-                "vod_pic": self.getPicS(img_src),//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
+                "vod_pic": self.getPicS(img_src),#//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
                 "vod_remarks": duration
             })
-        //pager = rsp('ul.pager.dx-pager')
+        #//pager = rsp('ul.pager.dx-pager')
         limit = 30
         total = 99999
         return {
