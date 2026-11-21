@@ -9,6 +9,7 @@ from pyquery import PyQuery as pq
 from urllib.parse import quote, unquote
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
+from urllib.parse import urljoin
 sys.path.append('..') 
 
 class Spider(Spider):
@@ -59,7 +60,7 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         tag = tid
-        urlstr=f'/{tag}/{pg}' if pg>1 else f'/{tag}/'
+        urlstr=f'/{tag}/{pg}' if int(pg)>1 else f'/{tag}/'
         rsp = self.getpq(self.host+urlstr)
         videos = []
         for item in rsp('a.thumb_img').items():
@@ -85,7 +86,7 @@ class Spider(Spider):
             "limit": limit,
             "total": total
         }
-    def getPicS(picurl):
+    def getPicS(self,picurl):
         return picurl.replace('medium@2x','small')
 
     def detailContent(self, array):
@@ -140,7 +141,7 @@ class Spider(Spider):
         return {"list": [vod]}
 
     def searchContent(self, key, quick, pg="1"):
-        urlstr=f'/{pg}' if pg>1 else f''
+        urlstr=f'/{pg}' if int(pg)>1 else f''
         rsp = self.getpq(self.host+f'search/{quote(key)}/'+urlstr)
         videos = []
         for item in rsp('a.thumb_img').items():
