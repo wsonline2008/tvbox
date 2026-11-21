@@ -17,7 +17,7 @@ class Spider(Spider):
         self.host = "https://www.fullhd.to"
         self.headers = {
             'Referer': self.host,
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0'
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
         }
         self.session = Session()
         self.session.headers.update(self.headers)
@@ -65,11 +65,15 @@ class Spider(Spider):
         videos = []
         for item in rsp('a.thumb_img').items():
             href = item.attr('href')
-            text = item.attr('title').strip()
+            text = item.attr('title')
+            text = text.strip() if text else ""
             img_src = item.find('img').attr('data-src')
-            if img_src=='':
+            if img_src==None || img_src=='':
                 img_src=item.find('img').attr('src')
-            duration = item.find('span.duration').text().strip()
+            duration = item.find('span.duration').text()
+            duration = duration.strip() if duration else ""
+            if href==None:
+                continue
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
@@ -87,6 +91,8 @@ class Spider(Spider):
             "total": total
         }
     def getPicS(self,picurl):
+        if not picurl:
+            return ""
         return picurl.replace('medium@2x','small')
 
     def detailContent(self, array):
@@ -146,11 +152,15 @@ class Spider(Spider):
         videos = []
         for item in rsp('a.thumb_img').items():
             href = item.attr('href')
-            text = item.attr('title').strip()
+            text = item.attr('title')
+            text = text.strip() if text else ""
             img_src = item.find('img').attr('data-src')
-            if img_src=='':
+            if img_src==None || img_src=='':
                 img_src=item.find('img').attr('src')
-            duration = item.find('span.duration').text().strip()
+            duration = item.find('span.duration').text()
+            duration = duration.strip() if duration else ""
+            if href==None:
+                continue
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
