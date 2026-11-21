@@ -62,25 +62,7 @@ class Spider(Spider):
         tag = tid
         urlstr=f'/{tag}/{pg}' if int(pg)>1 else f'/{tag}/'
         rsp = self.getpq(self.host+urlstr)
-        videos = []
-        for item in rsp('a.thumb_img').items():
-            href = item.attr('href')
-            text = item.attr('title')
-            text = text.strip() if text else ""
-            img_src = item.find('img').attr('data-src')
-            if img_src==None || img_src=='':
-                img_src=item.find('img').attr('src')
-            duration = item.find('span.duration').text()
-            duration = duration.strip() if duration else ""
-            if href==None:
-                continue
-            videos.append({
-                "vod_id": href,
-                "vod_name": text,
-                "vod_pic": quote(self.getPicS(img_src)),#//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
-                "vod_remarks": duration
-            })
-        #//pager = rsp('ul.pager.dx-pager')
+        videos = self.parseVodList(rsp)
         limit = 30
         total = 99999
         return {
@@ -90,6 +72,28 @@ class Spider(Spider):
             "limit": limit,
             "total": total
         }
+    def parseVodList(self, rsp):
+    #"""公共函数：从pyquery rsp对象提取vod列表，categoryContent、searchContent共用"""
+        videos = []
+        for item in rsp('a.thumb_img').items():
+            href = item.attr('href')
+            text = item.attr('title')
+            text = text.strip() if text else ""
+            img_src = item.find('img').attr('data-src')
+            if img_src is None or img_src == '':
+                img_src = item.find('img').attr('src')
+            duration = item.find('span.duration').text()
+            duration = duration.strip() if duration else ""
+            if href is None:
+                continue
+            videos.append({
+                "vod_id": href,
+                "vod_name": text,
+                "vod_pic": quote(self.getPicS(img_src)),
+                "vod_remarks": duration
+            })
+        return videos
+
     def getPicS(self,picurl):
         if not picurl:
             return ""
@@ -149,25 +153,7 @@ class Spider(Spider):
     def searchContent(self, key, quick, pg="1"):
         urlstr=f'/{pg}' if int(pg)>1 else f''
         rsp = self.getpq(self.host+f'search/{quote(key)}/'+urlstr)
-        videos = []
-        for item in rsp('a.thumb_img').items():
-            href = item.attr('href')
-            text = item.attr('title')
-            text = text.strip() if text else ""
-            img_src = item.find('img').attr('data-src')
-            if img_src==None || img_src=='':
-                img_src=item.find('img').attr('src')
-            duration = item.find('span.duration').text()
-            duration = duration.strip() if duration else ""
-            if href==None:
-                continue
-            videos.append({
-                "vod_id": href,
-                "vod_name": text,
-                "vod_pic": quote(self.getPicS(img_src)),#//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
-                "vod_remarks": duration
-            })
-        #//pager = rsp('ul.pager.dx-pager')
+        videos = self.parseVodList(rsp)
         limit = 30
         total = 99999
         return {
