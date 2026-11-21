@@ -92,7 +92,7 @@ class Spider(Spider):
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
-                "vod_pic": quote(self.getPicS(img_src)),
+                "vod_pic": self.getPicS(img_src),
                 "vod_remarks": duration
             })
         return videos
@@ -136,25 +136,28 @@ class Spider(Spider):
     
         # ✅ 按 weight【从小到大排序】！！如果你想要从高到低：source_list.sort(key=lambda x:x["weight"], reverse=True)
         source_list.sort(key=lambda x: x["weight"])
-    
-        vod_play_from = []
-        vod_play_url = []
+        # ============ 重点：仿照范例，构造多线路字符串，使用 $$$ 作为线路分隔符 ============
+        names = []     # 线路名称列表（清晰度）
+        play_lines = []# 每一条线路对应的剧集字符串
         for item in source_list:
-            # ✅ 线路名称 = 清晰度label；剧集数组里面只放【单集】，清晰度不再塞到剧集字符串！！
-            vod_play_from.append(item["label"])
-            # 这里"播放"两个字你可以改成"第1集"，按需修改
-            play_str = f"播放${quote(item['src'])}"
-            vod_play_url.append([play_str])
+            names.append(item["label"])
+            # 当前线路只有单集，数组内仅一条，#join之后就是这一集
+            one_ep = [f"播放${quote(item['src'])}"]
+            play_lines.append("#".join(one_ep))
+    
+        vod_play_from = "$$$".join(names)
+        vod_play_url  = "$$$".join(play_lines)
     
         # 组装vod对象
         vod = {
             "vod_id": detail_url,
-            "vod_name": "",
-            "vod_pic": "",  # 海报有就填，需要代理就套 self.getProxyUrl()+quote
+            "vod_name": "暂无名称",
+            "vod_pic": "",  # 后续接入 buildImgUrl
             "vod_play_from": vod_play_from,
             "vod_play_url": vod_play_url
         }
         return {"list": [vod]}
+
 
 
     def searchContent(self, key, quick, pg="1"):
@@ -209,7 +212,8 @@ class Spider(Spider):
             return ""
         group_id = vid - (vid % 1000)  # 后三位清零
         img_url = f"https://img.fullhd.to/{group_id}/{vid}/small/1.jpg"
-    
+#https://down.nigx.cn/raw.githubusercontent.com/wsonline2008/tvbox/refs/heads/master/188X.json
+        
         # ========== 新增：下载图片 + base64编码 ==========
         try:
             # 这里替换成你项目统一的http请求！！如果你的项目不用self.session就改成你自己的get函数
