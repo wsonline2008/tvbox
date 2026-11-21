@@ -1,3 +1,4 @@
+
 # coding=utf-8
 # !/usr/bin/python
 import sys
@@ -87,56 +88,56 @@ class Spider(Spider):
     def getPicS(picurl):
         return picurl.replace('medium@2x','small')
 
-def detailContent(self, array):
-    # array[0] 就是传过来的详情页url（沿用咱们前面约定：vod_id存详情页链接）
-    detail_url = array[0]
-    rsp = self.getpq(detail_url)
-    # 👉 取出所有 source 标签
-    source_items = rsp("video source").items()
-    # ========== 清晰度权重表【从小到大！！数字越小清晰度越低】你可以自行扩充修改 ==========
-    rank_map = {
-        "360P": 1,
-        "480P": 2,
-        "720P": 3,
-        "1080P": 4,
-        "2160P": 6,
-        "2K": 8,
-        "4K": 10
-    }
-    source_list = []
-    for s in source_items:
-        label = s.attr("label")
-        src = s.attr("src")
-        if not label or not src:
-            continue  # label或者src为空直接跳过这条无效source
-        # 补全相对路径为完整url
-        full_src = urljoin(detail_url, src)
-        # 获取排序权重，如果label不在rank_map里面，默认给一个比较大的值放到末尾
-        weight = rank_map.get(label.upper(), 99)
-        source_list.append({
-            "label": label,
-            "src": full_src,
-            "weight": weight
-        })
-
-    # ✅ 按 weight【从小到大排序】！！
-    source_list.sort(key=lambda x: x["weight"])
-
-    # 拼接成 CSP 多选集字符串： label$url#label$url#...
-    play_parts = []
-    for item in source_list:
-        play_parts.append(f"{item['label']}${quote(item['src'])}")
-    vod_play_url = "#".join(play_parts)
-
-    # 组装vod对象，线路名称你自行修改，这里写"多清晰度"
-    vod = {
-        "vod_id": detail_url,
-        "vod_name": "",
-        "vod_pic": "", # 海报有就填，需要代理就套 self.getProxyUrl()+quote
-        "vod_play_from": "多清晰度",
-        "vod_play_url": vod_play_url
-    }
-    return {"list": [vod]}
+    def detailContent(self, array):
+        # array[0] 就是传过来的详情页url（沿用咱们前面约定：vod_id存详情页链接）
+        detail_url = array[0]
+        rsp = self.getpq(detail_url)
+        # 👉 取出所有 source 标签
+        source_items = rsp("video source").items()
+        # ========== 清晰度权重表【从小到大！！数字越小清晰度越低】你可以自行扩充修改 ==========
+        rank_map = {
+            "360P": 1,
+            "480P": 2,
+            "720P": 3,
+            "1080P": 4,
+            "2160P": 6,
+            "2K": 8,
+            "4K": 10
+        }
+        source_list = []
+        for s in source_items:
+            label = s.attr("label")
+            src = s.attr("src")
+            if not label or not src:
+                continue  # label或者src为空直接跳过这条无效source
+            # 补全相对路径为完整url
+            full_src = urljoin(detail_url, src)
+            # 获取排序权重，如果label不在rank_map里面，默认给一个比较大的值放到末尾
+            weight = rank_map.get(label.upper(), 99)
+            source_list.append({
+                "label": label,
+                "src": full_src,
+                "weight": weight
+            })
+    
+        # ✅ 按 weight【从小到大排序】！！
+        source_list.sort(key=lambda x: x["weight"])
+    
+        # 拼接成 CSP 多选集字符串： label$url#label$url#...
+        play_parts = []
+        for item in source_list:
+            play_parts.append(f"{item['label']}${quote(item['src'])}")
+        vod_play_url = "#".join(play_parts)
+    
+        # 组装vod对象，线路名称你自行修改，这里写"多清晰度"
+        vod = {
+            "vod_id": detail_url,
+            "vod_name": "",
+            "vod_pic": "", # 海报有就填，需要代理就套 self.getProxyUrl()+quote
+            "vod_play_from": "多清晰度",
+            "vod_play_url": vod_play_url
+        }
+        return {"list": [vod]}
 
     def searchContent(self, key, quick, pg="1"):
         urlstr=f'/{pg}' if pg>1 else f''
