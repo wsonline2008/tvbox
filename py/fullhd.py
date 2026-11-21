@@ -58,7 +58,7 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         tag = tid
-        urlstr=f'{tag}/{pg}' if pg>1 else f'{tag}/'
+        urlstr=f'/{tag}/{pg}' if pg>1 else f'/{tag}/'
         rsp = self.getpq(self.host+urlstr)
         videos = []
         for item in rsp('a.thumb_img').items():
