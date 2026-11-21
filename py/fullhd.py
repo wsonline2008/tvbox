@@ -3,6 +3,7 @@
 # !/usr/bin/python
 import sys
 import requests
+import re
 from requests import Session
 from base.spider import Spider
 from pyquery import PyQuery as pq
@@ -77,15 +78,17 @@ class Spider(Spider):
         videos = []
         for item in rsp('a.thumb_img').items():
             href = item.attr('href')
-            text = item.attr('title')
-            text = text.strip() if text else ""
-            img_src = item.find('img').attr('data-src')
-            if img_src is None or img_src == '':
-                img_src = item.find('img').attr('src')
-            duration = item.find('span.duration').text()
-            duration = duration.strip() if duration else ""
             if href is None:
                 continue
+            img_src=self.buildImgUrl(href)
+            text = item.attr('title')
+            text = text.strip() if text else ""
+            #img_src = item.find('img').attr('data-src')
+            #if img_src is None or img_src == '':
+            #    img_src = item.find('img').attr('src')
+            duration = item.find('span.duration').text()
+            duration = duration.strip() if duration else ""
+
             videos.append({
                 "vod_id": href,
                 "vod_name": text,
@@ -185,6 +188,22 @@ class Spider(Spider):
             print(f"请求失败: , {str(e)}")
             return None
     
+
+    def buildImgUrl(self, detail_url):
+        #"""从详情页url生成图片地址，失败返回空字符串"""
+        # 提取 /videos/后面的数字id
+        m = re.search(r'/videos/(\d+)', detail_url)
+        if not m:
+            return ""
+        vid_str = m.group(1)
+        try:
+            vid = int(vid_str)
+        except ValueError:
+            return ""
+        group_id = vid - (vid % 1000)  # 后三位清零
+        img_url = f"https://img.fullhd.to/{group_id}/{vid}/small/1.jpg"
+        return img_url
+
     def decrypt_img(self, url):
         key_str = 'f5d965df75336270'
         iv_str = '97b60394abc2fbe1'
