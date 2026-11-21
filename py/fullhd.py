@@ -34,21 +34,21 @@ class Spider(Spider):
     def homeContent(self, filter):
         result = {}
         result = {"class": [
-        {"type_id": "latest-updates", "type_name": "最新视频??"},
-        {"type_id": "top-rated", "type_name": "最佳视频??"},
-        {"type_id": "most-popular", "type_name": "热门影片??"},
-        {"type_id": "networks/brazzers-com", "type_name": "Brazzers??"},
-        {"type_id": "networks/tushy-com", "type_name": "Tushy??"},
-        {"type_id": "networks/naughtyamerica-com", "type_name": "Naughtyamerica??"},
-        {"type_id": "sites/sexmex", "type_name": "Sexmex??"},
-        {"type_id": "sites/passion-hd", "type_name": "Passion-HD??"},
-        {"type_id": "categories/animation", "type_name": "Animation??"},
-        {"type_id": "categories/18-years-old", "type_name": "Teen??"},
-        {"type_id": "categories/pawg", "type_name": "Pawg??"},
-        {"type_id": "categories/thong", "type_name": "Thong??"},
-        {"type_id": "categories/stockings", "type_name": "Stockings??"},
-        {"type_id": "categories/jav-uncensored", "type_name": "JAV??"},
-        {"type_id": "categories/pantyhose", "type_name": "Pantyhose??"}
+        {"type_id": "latest-updates", "type_name": "最新"},
+        {"type_id": "top-rated", "type_name": "最佳"},
+        {"type_id": "most-popular", "type_name": "热门"},
+        {"type_id": "networks/brazzers-com", "type_name": "Brazzers"},
+        {"type_id": "networks/tushy-com", "type_name": "Tushy"},
+        {"type_id": "networks/naughtyamerica-com", "type_name": "Naughtyamerica"},
+        {"type_id": "sites/sexmex", "type_name": "Sexmex"},
+        {"type_id": "sites/passion-hd", "type_name": "Passion"},
+        {"type_id": "categories/animation", "type_name": "动画"},
+        {"type_id": "categories/18-years-old", "type_name": "18岁"},
+        {"type_id": "categories/pawg", "type_name": "美臀"},
+        {"type_id": "categories/thong", "type_name": "丁字裤"},
+        {"type_id": "categories/stockings", "type_name": "丝袜"},
+        {"type_id": "categories/jav-uncensored", "type_name": "日本"},
+        {"type_id": "categories/pantyhose", "type_name": "Pantyhose"}
                             ],
                  }
         return result
@@ -139,23 +139,25 @@ def detailContent(self, array):
     return {"list": [vod]}
 
     def searchContent(self, key, quick, pg="1"):
-        rsp = self.getpq(f'search/{quote(key)}/{pg}')
+        urlstr=f'/{pg}' if pg>1 else f''
+        rsp = self.getpq(self.host+f'search/{quote(key)}/'+urlstr)
         videos = []
-        for item in rsp('.video-item').items():
-            title_link = item.find('a.line-clamp-1')
-            href = title_link.attr('href')
-            text = title_link.text().encode('latin-1').decode('utf-8').strip()
+        for item in rsp('a.thumb_img').items():
+            href = item.attr('href')
+            text = item.attr('title').strip()
             img_src = item.find('img').attr('data-src')
-            duration = item.find('.flex.justify-end .text-white').text().strip()
+            if img_src=='':
+                img_src=item.find('img').attr('src')
+            duration = item.find('span.duration').text().strip()
             videos.append({
-                "vod_id": href.split('/')[-1],
+                "vod_id": href,
                 "vod_name": text,
-                "vod_pic": f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
+                "vod_pic": self.getPicS(img_src),//f"{self.getProxyUrl()}&type=img&url={quote(img_src)}",
                 "vod_remarks": duration
             })
-        pager = rsp('ul.pager.dx-pager')
-        limit = int(pager.attr('data-rec-per-page'))
-        total = int(pager.attr('data-rec-total'))
+        //pager = rsp('ul.pager.dx-pager')
+        limit = 30
+        total = 99999
         return {
             "list": videos,
             "page": pg,
