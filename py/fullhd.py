@@ -4,13 +4,13 @@
 import sys
 import requests
 import re
+import base64
 from requests import Session
 from base.spider import Spider
 from pyquery import PyQuery as pq
-from urllib.parse import quote, unquote
+from urllib.parse import quote, unquote,urljoin
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-from urllib.parse import urljoin
 sys.path.append('..') 
 
 class Spider(Spider):
@@ -120,9 +120,9 @@ class Spider(Spider):
         }
         source_list = []
         for s in source_items:
-            label = s.attr("label")
-            src = s.attr("src")
-            if not label or not src:
+            label = s.attr("label") or ""
+            src = s.attr("src") or ""
+            if not label.strip() or not src.strip():
                 continue  # label或者src为空直接跳过这条无效source
             # 补全相对路径为完整url
             full_src = urljoin(detail_url, src)
@@ -134,24 +134,28 @@ class Spider(Spider):
                 "weight": weight
             })
     
-        # ✅ 按 weight【从小到大排序】！！
+        # ✅ 按 weight【从小到大排序】！！如果你想要从高到低：source_list.sort(key=lambda x:x["weight"], reverse=True)
         source_list.sort(key=lambda x: x["weight"])
     
-        # 拼接成 CSP 多选集字符串： label$url#label$url#...
-        play_parts = []
+        vod_play_from = []
+        vod_play_url = []
         for item in source_list:
-            play_parts.append(f"{item['label']}${quote(item['src'])}")
-        vod_play_url = "#".join(play_parts)
+            # ✅ 线路名称 = 清晰度label；剧集数组里面只放【单集】，清晰度不再塞到剧集字符串！！
+            vod_play_from.append(item["label"])
+            # 这里"播放"两个字你可以改成"第1集"，按需修改
+            play_str = f"播放${quote(item['src'])}"
+            vod_play_url.append([play_str])
     
-        # 组装vod对象，线路名称你自行修改，这里写"多清晰度"
+        # 组装vod对象
         vod = {
             "vod_id": detail_url,
             "vod_name": "",
-            "vod_pic": "", # 海报有就填，需要代理就套 self.getProxyUrl()+quote
-            "vod_play_from": "多清晰度",
+            "vod_pic": "",  # 海报有就填，需要代理就套 self.getProxyUrl()+quote
+            "vod_play_from": vod_play_from,
             "vod_play_url": vod_play_url
         }
         return {"list": [vod]}
+
 
     def searchContent(self, key, quick, pg="1"):
         urlstr=f'/{pg}' if int(pg)>1 else f''
@@ -188,9 +192,12 @@ class Spider(Spider):
             print(f"请求失败: , {str(e)}")
             return None
     
-
     def buildImgUrl(self, detail_url):
-        #"""从详情页url生成图片地址，失败返回空字符串"""
+        """
+        从详情页url提取vid拼接图片地址；
+        如果需要，下载图片转为base64图片data-url
+        return: 正常返回base64图片串，出错返回 ""
+        """
         # 提取 /videos/后面的数字id
         m = re.search(r'/videos/(\d+)', detail_url)
         if not m:
@@ -202,7 +209,25 @@ class Spider(Spider):
             return ""
         group_id = vid - (vid % 1000)  # 后三位清零
         img_url = f"https://img.fullhd.to/{group_id}/{vid}/small/1.jpg"
-        return img_url
+    
+        # ========== 新增：下载图片 + base64编码 ==========
+        try:
+            # 这里替换成你项目统一的http请求！！如果你的项目不用self.session就改成你自己的get函数
+            resp = self.session.get(img_url, timeout=5)
+            resp.raise_for_status()  # 4xx/5xx直接抛异常进入except
+            img_bytes = resp.content
+            if not img_bytes:
+                return ""
+            # 二进制转base64
+            b64_data = base64.b64encode(img_bytes).decode("utf-8")
+            # 组装成浏览器可识别的data url
+            img_base64 = f"data:image/jpeg;base64,{b64_data}"
+            return img_base64
+        except Exception as e:
+            # 图片请求失败（超时、403、404、防盗链）直接返回空字符串
+            # 你可以在这里print调试：print("图片获取失败", img_url, e)
+            return ""
+
 
     def decrypt_img(self, url):
         key_str = 'f5d965df75336270'
