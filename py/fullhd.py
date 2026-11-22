@@ -213,7 +213,8 @@ class Spider(Spider):
         group_id = vid - (vid % 1000)  # 后三位清零
         img_url = f"https://img.fullhd.to/{group_id}/{vid}/small/1.jpg"
 #https://down.nigx.cn/raw.githubusercontent.com/wsonline2008/tvbox/refs/heads/master/188X.json
-        
+        return img_url
+        """
         # ========== 新增：下载图片 + base64编码 ==========
         try:
             # 这里替换成你项目统一的http请求！！如果你的项目不用self.session就改成你自己的get函数
@@ -231,7 +232,7 @@ class Spider(Spider):
             # 图片请求失败（超时、403、404、防盗链）直接返回空字符串
             # 你可以在这里print调试：print("图片获取失败", img_url, e)
             return ""
-
+"""
 
     def decrypt_img(self, url):
         key_str = 'f5d965df75336270'
