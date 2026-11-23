@@ -10,6 +10,7 @@ import re
 import requests
 from lxml import etree
 from urllib.parse import urljoin
+sys.path.append("..")
 
 class Spider(Spider):
     
@@ -27,6 +28,8 @@ class Spider(Spider):
             'Connection': 'keep-alive',
             'Referer': self.host
         }
+        self.session = Session()
+        self.session.headers.update(self.headers)
         # 定义特殊分区ID列表，包含所有需要特殊处理的分类
         self.special_categories = ['13', '14', '33',  '53', '32', '52', '9']
         self.log(f"苹果爬虫初始化完成，主站: {self.host}")
@@ -123,7 +126,7 @@ class Spider(Spider):
             if pg and pg != '1':
                 url = url.replace('.html', f'/page/{pg}.html')
             # 在这里将 type_id 传递给 _get_videos 方法
-            videos = self._get_videos(url, category_id=type_id, limit=20)
+            videos = self.parseVodList(url)
             
             # 使用固定页数设置，而不是尝试从页面解析
             pagecount = 999
@@ -148,7 +151,7 @@ class Spider(Spider):
             self.log(f"搜索URL: {search_url}")
             
             # 提取搜索结果
-            videos = self._get_videos(search_url, limit=20)
+            videos = self.parseVodList(search_url)
             
             # 使用固定页数设置，而不是尝试从页面解析
             pagecount = 999
@@ -186,7 +189,7 @@ class Spider(Spider):
             rsp = self.fetch(url, headers=self.headers)
             doc = self.html(rsp.text)
             videos = []
-            elements = doc.xpath('//a[@class="vodbox"]')
+            elements = doc.xpath('//a[@class="thumbnail"]')
             for elem in elements:
                 link = elem.xpath('./@href')[0]
                 if link.startswith('/'):
@@ -230,6 +233,45 @@ class Spider(Spider):
             self.log(f"标题解密失败: {str(e)}")
             return encrypted_text
 
+    def parseVodList(self, url):
+    #"""公共函数：从pyquery rsp对象提取vod列表，categoryContent、searchContent共用"""
+        rsp = self.getpq(url)
+        videos = []
+        Aitems=rsp('a.vodbox').items()
+        if not Aitems
+            Aitems=rsp('a.thumbnail').items()
+        for item in Aitems:
+            link = item.attr('href')
+            if link is None:
+                continue
+            # 提取链接中的参数
+            parsed_url = urllib.parse.urlparse(link)
+            query_params = urllib.parse.parse_qs(parsed_url.query)
+            href = query_params.get('v', [''])[0]
+            img_src = query_params.get('b', [''])[0]
+            # 提取标题
+            title_elem = item.find('p.km-script').text()
+            if title_elem:
+                title_encrypted = title_elem.strip()
+                title_elem = self._decrypt_title(title_encrypted)
+            else
+                title_elem = ''
+
+            videos.append({
+                "vod_id": href,
+                "vod_name": title_elem,
+                "vod_pic": img_src,
+                "vod_remarks": ''
+            })
+        return videos
+
+    def getpq(self, path):
+        try:
+            rsp = self.session.get(f'{path}', timeout=5).text
+            return pq(rsp.encode('utf-8'))
+        except Exception as e:
+            print(f"请求失败: , {str(e)}")
+            return None
 
     def _get_text(self, doc, selectors):
         """通用文本提取"""
@@ -260,8 +302,3 @@ class Spider(Spider):
         except Exception as e:
             self.log(f"网络请求失败: {url}, 错误: {str(e)}")
             return None
-
-# 注册爬虫
-if __name__ == '__main__':
-    from base.spider import Spider as BaseSpider
-    BaseSpider.register(Spider())
