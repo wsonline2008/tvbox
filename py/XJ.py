@@ -44,24 +44,24 @@ class Spider(Spider):
         result = {}
         # 只保留指定的分类
         classes = [
-            {'type_id': '618041.xyz_1', 'type_name': '全部视频'},
-            {'type_id': '618041.xyz_13', 'type_name': '香蕉精品'},
-            {'type_id': '618041.xyz_22', 'type_name': '制服诱惑'},
-            {'type_id': '618041.xyz_6', 'type_name': '国产视频'},
-            {'type_id': '618041.xyz_8', 'type_name': '清纯少女'},
-            {'type_id': '618041.xyz_9', 'type_name': '辣妹大奶'},
-            {'type_id': '618041.xyz_10', 'type_name': '女同专属'},
-            {'type_id': '618041.xyz_11', 'type_name': '素人出演'},
-            {'type_id': '618041.xyz_12', 'type_name': '角色扮演'},
-            {'type_id': '618041.xyz_20', 'type_name': '人妻熟女'},
-            {'type_id': '618041.xyz_23', 'type_name': '日韩剧情'},
-            {'type_id': '618041.xyz_21', 'type_name': '经典伦理'},
-            {'type_id': '618041.xyz_7', 'type_name': '成人动漫'},
-            {'type_id': '618041.xyz_14', 'type_name': '精品二区'},
-            {'type_id': '618041.xyz_53', 'type_name': '动漫中字'},
-            {'type_id': '618041.xyz_52', 'type_name': '日本无码'},
-            {'type_id': '618041.xyz_33', 'type_name': '中文字幕'},
-            {'type_id': '618041.xyz_32', 'type_name': '国产自拍'}
+            {'type_id': '1', 'type_name': '全部视频'},
+            {'type_id': '13', 'type_name': '香蕉精品'},
+            {'type_id': '22', 'type_name': '制服诱惑'},
+            {'type_id': '6', 'type_name': '国产视频'},
+            {'type_id': '8', 'type_name': '清纯少女'},
+            {'type_id': '9', 'type_name': '辣妹大奶'},
+            {'type_id': '10', 'type_name': '女同专属'},
+            {'type_id': '11', 'type_name': '素人出演'},
+            {'type_id': '12', 'type_name': '角色扮演'},
+            {'type_id': '20', 'type_name': '人妻熟女'},
+            {'type_id': '23', 'type_name': '日韩剧情'},
+            {'type_id': '21', 'type_name': '经典伦理'},
+            {'type_id': '7', 'type_name': '成人动漫'},
+            {'type_id': '14', 'type_name': '精品二区'},
+            {'type_id': '53', 'type_name': '动漫中字'},
+            {'type_id': '52', 'type_name': '日本无码'},
+            {'type_id': '33', 'type_name': '中文字幕'},
+            {'type_id': '32', 'type_name': '国产自拍'}
         ]
         result['class'] = classes
         return result
@@ -72,8 +72,8 @@ class Spider(Spider):
     def categoryContent(self, tid, pg, filter, extend):
         """分类内容 - 修改为使用固定页数设置"""
         try:
-            domain, type_id = tid.split('_')
-            url = f"https://{domain}/index.php/vod/type/id/{type_id}.html"
+            #domain, type_id = tid.split('_')
+            url = f"{self.host}/index.php/vod/type/id/{tid}.html"
             if pg and pg != '1':
                 url = url.replace('.html', f'/page/{pg}.html')
             # 在这里将 type_id 传递给 _get_videos 方法
@@ -117,7 +117,7 @@ class Spider(Spider):
         play_url = array[0]
         return {
             "vod_play_from": "线路1",
-            "vod_play_url": f"$${play_url}"
+            "vod_play_url": f"正片${play_url}"
         }
 
     def playerContent(self, flag, id, vipFlags):
