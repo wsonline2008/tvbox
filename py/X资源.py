@@ -56,12 +56,24 @@ class Spider(Spider):
         tag = tid
         urlstr=f'?pg={pg}' if int(pg)>1 else ''
         data = self.getjson(self.host+'/api/json.php'+urlstr)
+        videos = []
+        arr=data.get("list", [])
+        for item in arr:
+            vod_id = item.get("vod_play_url")
+            if not vod_id
+                continue
+            videos.append({
+                "vod_id": vod_id,
+                "vod_name": item.get("vod_name",""),
+                "vod_pic": item.get("vod_pic",""),
+                "vod_remarks": item.get("vod_time","")
+            })
         return {
-            "page": data.get("page", 1),
-            "pagecount": data.get("pagecount", 9),
-            "limit": data.get("limit", 20),
-            "total": data.get("total", 99),
-            "list": data.get("list", [])
+            "list": videos,
+            "page": pg,
+            "pagecount": item.get("pagecount",""),
+            "limit": item.get("limit",""),
+            "total": item.get("total","")
         }
 
     def getPicS(self,picurl):
@@ -108,53 +120,4 @@ class Spider(Spider):
             print(f"请求失败: , {str(e)}")
             return None
     
-    def buildImgUrl(self, detail_url):
-        """
-        从详情页url提取vid拼接图片地址；
-        如果需要，下载图片转为base64图片data-url
-        return: 正常返回base64图片串，出错返回 ""
-        """
-        # 提取 /videos/后面的数字id
-        m = re.search(r'/videos/(\d+)', detail_url)
-        if not m:
-            return ""
-        vid_str = m.group(1)
-        try:
-            vid = int(vid_str)
-        except ValueError:
-            return ""
-        group_id = vid - (vid % 1000)  # 后三位清零
-        img_url = f"https://img.fullhd.to/{group_id}/{vid}/small/1.jpg"
-#https://down.nigx.cn/raw.githubusercontent.com/wsonline2008/tvbox/refs/heads/master/188X.json
-        return img_url
-        """
-        # ========== 新增：下载图片 + base64编码 ==========
-        try:
-            # 这里替换成你项目统一的http请求！！如果你的项目不用self.session就改成你自己的get函数
-            resp = self.session.get(img_url, timeout=5)
-            resp.raise_for_status()  # 4xx/5xx直接抛异常进入except
-            img_bytes = resp.content
-            if not img_bytes:
-                return ""
-            # 二进制转base64
-            b64_data = base64.b64encode(img_bytes).decode("utf-8")
-            # 组装成浏览器可识别的data url
-            img_base64 = f"data:image/jpeg;base64,{b64_data}"
-            return img_base64
-        except Exception as e:
-            # 图片请求失败（超时、403、404、防盗链）直接返回空字符串
-            # 你可以在这里print调试：print("图片获取失败", img_url, e)
-            return ""
-"""
-
-    def decrypt_img(self, url):
-        key_str = 'f5d965df75336270'
-        iv_str = '97b60394abc2fbe1'
-        key = key_str.encode('utf-8')
-        iv = iv_str.encode('utf-8')
-        encrypted_bytes = self.session.get(url, timeout=5).content
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        decrypted_bytes = cipher.decrypt(encrypted_bytes)
-        final_data = unpad(decrypted_bytes, AES.block_size)
-        return final_data
 
