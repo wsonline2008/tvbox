@@ -53,11 +53,11 @@ class Spider(Spider):
         pass
 
     def categoryContent(self, tid, pg, filter, extend):
-        tag = tid
+        '''tag = tid
         urlstr=f'?pg={pg}' if int(pg)>1 else ''
         data = self.getjson(quote(self.host+'/api/json.php'+urlstr))
         videos = []
-        arr=data.get("list", [])'''
+        arr=data.get("list", [])
         for item in arr:
             vod_id = item.get("vod_play_url")
             videos.append({
