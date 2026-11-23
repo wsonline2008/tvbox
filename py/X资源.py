@@ -71,15 +71,10 @@ class Spider(Spider):
         return {
             "list": videos,
             "page": pg,
-            "pagecount": item.get("pagecount",""),
-            "limit": item.get("limit",""),
-            "total": item.get("total","")
+            "pagecount": item.get("pagecount",9),
+            "limit": item.get("limit",20),
+            "total": item.get("total",99)
         }
-
-    def getPicS(self,picurl):
-        if not picurl:
-            return ""
-        return picurl.replace('medium@2x','small')
 
     def detailContent(self, array):
         url = array[0]
