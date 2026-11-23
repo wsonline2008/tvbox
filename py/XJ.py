@@ -44,7 +44,7 @@ class Spider(Spider):
         result = {}
         # 只保留指定的分类
         classes = [
-            {'type_id': '1', 'type_name': '全部视频'},
+            #{'type_id': '1', 'type_name': '全部视频'},
             {'type_id': '13', 'type_name': '香蕉精品'},
             {'type_id': '22', 'type_name': '制服诱惑'},
             {'type_id': '6', 'type_name': '国产视频'},
@@ -183,3 +183,14 @@ class Spider(Spider):
             print(f"请求失败: , {str(e)}")
             return None
 
+    def parseVodList2(self, url):
+    #"""公共函数：从pyquery rsp对象提取vod列表，categoryContent、searchContent共用"""9o8qTJso6c53V89mrWScFo1ncht2fvatitCVJYoj2tb8egCxgRQJu42PZxjaL711U4
+        rsp = self.getpq(url)
+        videos = []
+        videos.append({
+            "vod_id": 'https://m-hs.cqvelf.cn/20250731/ekrbYkY2z/vXsk5vmrCBv/LpMgv9HL/index.m3u8',
+            "vod_name": 'a',
+            "vod_pic": '',
+            "vod_remarks": ''
+        })
+        return videos
