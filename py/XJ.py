@@ -186,7 +186,7 @@ class Spider(Spider):
             rsp = self.fetch(url, headers=self.headers)
             doc = self.html(rsp.text)
             videos = []
-            elements = doc.xpath('//a[@class="thumbnail"]')
+            elements = doc.xpath('//a[@class="vodbox"]')
             for elem in elements:
                 link = elem.xpath('./@href')[0]
                 if link.startswith('/'):
