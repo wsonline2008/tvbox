@@ -72,7 +72,23 @@ class Spider(Spider):
     def detailContent(self, array):
         # array[0] = csp返回的vod_id
         vod_id = array[0]
-        return vod_id
+        params = {
+            "ac": "detail",
+            "ids": vod_id
+        }
+        url = self.csp_api + "?" + urlencode(params)
+        resp = self.session.get(url, headers=self.headers)
+        data = resp.json()
+        vod_info = data.get("list", [{}])[0]
+        return {
+            "vod_id": vod_info.get("vod_id"),
+            "vod_name": vod_info.get("vod_name"),
+            "vod_pic": vod_info.get("vod_pic"),
+            "vod_remarks": vod_info.get("vod_remarks"),
+            "vod_year": vod_info.get("vod_year"),
+            "vod_play_from": vod_info.get("vod_play_from"),
+            "vod_play_url": vod_info.get("vod_play_url")
+        }
 
     def searchContent(self, key, quick, pg="1"):
         pass
