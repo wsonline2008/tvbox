@@ -102,7 +102,7 @@ class Spider(Spider):
 
     def getjson(self, path):
         try:
-            rsp = self.session.get(f'{path}', timeout=5).text
+            rsp = self.session.get(f'{path}', timeout=5)
             return rsp.json()
         except Exception as e:
             print(f"请求失败: , {str(e)}")
