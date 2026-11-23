@@ -63,7 +63,7 @@ class Spider(Spider):
             if not vod_id
                 continue
             videos.append({
-                "vod_id": vod_id,
+                "vod_id": quote(vod_id),
                 "vod_name": item.get("vod_name",""),
                 "vod_pic": item.get("vod_pic",""),
                 "vod_remarks": item.get("vod_time","")
@@ -80,7 +80,7 @@ class Spider(Spider):
         url = array[0]
         vod = {
             "vod_play_from": "线路",
-            "vod_play_url": f"正片${quote(url)}"
+            "vod_play_url": f"正片${url}"
         }
         return {"list": [vod]}
 
@@ -89,7 +89,7 @@ class Spider(Spider):
 
     def playerContent(self, flag, id, vipFlags):
         return {
-            "url": id,
+            "url": unquote(id),
             "parse": '0',
             "contentType": '',
             "header": self.headers
