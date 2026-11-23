@@ -71,9 +71,9 @@ class Spider(Spider):
         return {
             "list": videos,
             "page": pg,
-            "pagecount": item.get("pagecount",9),
-            "limit": item.get("limit",20),
-            "total": item.get("total",99)
+            "pagecount": data.get("pagecount",9),
+            "limit": data.get("limit",20),
+            "total": data.get("total",99)
         }
 
     def detailContent(self, array):
