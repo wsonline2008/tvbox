@@ -65,8 +65,8 @@ class Spider(Spider):
             videos.append({
                 "vod_id": vod_id,
                 "vod_name": item.get("vod_name",""),
-                "vod_pic": item.get("vod_pic","")#,
-                #"vod_remarks": item.get("vod_time","")
+                "vod_pic": item.get("vod_pic",""),
+                "vod_remarks": item.get("vod_time","")
             })
         return {
             "list": videos,
@@ -78,10 +78,11 @@ class Spider(Spider):
 
     def detailContent(self, array):
         url = array[0]
-        return {
+        vod = {
             "vod_play_from": "线路",
-            "vod_play_url": f"正片${url}"
+            "vod_play_url": f"正片${quote(url)}"
         }
+        return {"list": [vod]}
 
     def searchContent(self, key, quick, pg="1"):
         pass
