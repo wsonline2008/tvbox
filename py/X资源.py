@@ -53,21 +53,22 @@ class Spider(Spider):
         pass
 
     def categoryContent(self, tid, pg, filter, extend):
-        '''tag = tid
-        urlstr=f'?pg={pg}' if int(pg)>1 else ''
-        data = self.getjson(quote(self.host+'/api/json.php'+urlstr))
+        #'''tag = tid
+        #urlstr=f'?pg={pg}' if int(pg)>1 else ''
+        #data = self.getjson(self.host+'/api/json.php'+urlstr)
+        #videos = []
+        #arr=data.get("list", [])
+        #for item in arr:
+            #vod_id = item.get("vod_play_url")
+            #videos.append({
+                #"vod_id": quote(vod_id),
+                #"vod_name": item.get("vod_name",""),
+                #"vod_pic": item.get("vod_pic",""),
+                #"vod_remarks": item.get("vod_time","")
+            #})'''
         videos = []
-        arr=data.get("list", [])
-        for item in arr:
-            vod_id = item.get("vod_play_url")
-            videos.append({
-                "vod_id": quote(vod_id),
-                "vod_name": item.get("vod_name",""),
-                "vod_pic": item.get("vod_pic",""),
-                "vod_remarks": item.get("vod_time","")
-            })'''
         videos.append({
-            "vod_id": quote("https://video17.balecao.com/video/20220227/e0f64dfe84cbfe8c1367dfba2c689afd/index.m3u8"),
+            "vod_id": "https://video17.balecao.com/video/20220227/e0f64dfe84cbfe8c1367dfba2c689afd/index.m3u8",
             "vod_name": "",
             "vod_pic": "https://pic17.xne03.com/pic/20220227/e0f64dfe84cbfe8c1367dfba2c689afd/1.jpg",
             "vod_remarks": ""
@@ -93,14 +94,14 @@ class Spider(Spider):
 
     def playerContent(self, flag, id, vipFlags):
         return {
-            "url": unquote(id),
+            "url": id,
             "parse": '0',
             "contentType": '',
             "header": self.headers
         }
 
     def getjson(self, path):
-        rsp = self.session.get(f'{unquote(path)}', timeout=5)
+        rsp = self.session.get(f'{path}', timeout=5)
         return rsp.json()
           
     def getpq(self, path):
