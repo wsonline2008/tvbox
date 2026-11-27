@@ -41,10 +41,14 @@ class Spider(Spider):
         {"type_id": "20", "type_name": "最新"},
         {"type_id": "21", "type_name": "最佳"},
         {"type_id": "22", "type_name": "热门"},
-        {"type_id": "23", "type_name": "Brazzers"},
-        {"type_id": "24", "type_name": "Tushy"},
-        {"type_id": "25", "type_name": "Naughtyamerica"},
-        {"type_id": "26", "type_name": "Pantyhose"}
+        {"type_id": "24", "type_name": "24日无码"},
+        {"type_id": "27", "type_name": "27性感"},
+        {"type_id": "28", "type_name": "28乱"},
+        {"type_id": "29", "type_name": "29欧美"},
+        {"type_id": "29", "type_name": "31三级"},
+        {"type_id": "29", "type_name": "32卡通"},
+        {"type_id": "29", "type_name": "33"},
+        {"type_id": "29", "type_name": "35"}
                             ],
                  }
         return result
