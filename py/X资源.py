@@ -71,7 +71,7 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         tag = tid
-        ban_list = {"偷拍", "摄像头", "酒店", "抢先"}
+        ban_list = {"偷拍", "摄像头", "酒店", "探花","抄底","厕拍"}
         urlstr=f'?pg={pg}&t={tag}' if int(pg)>1 else f'?t={tag}'
         data = self.getjson(self.host+'/api/json.php'+urlstr)
         videos = []
