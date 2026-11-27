@@ -15,6 +15,7 @@ from Crypto.Util.Padding import unpad
 sys.path.append('..') 
 
 class Spider(Spider):
+    ban_list = {"偷拍", "摄像头", "酒店", "抢先"}
     def init(self, extend="{}"):
         self.host = "https://www.gdlsp.com"
         self.headers = {
@@ -38,17 +39,29 @@ class Spider(Spider):
     def homeContent(self, filter):
         result = {}
         result = {"class": [
-        {"type_id": "20", "type_name": "最新"},
-        {"type_id": "21", "type_name": "最佳"},
-        {"type_id": "22", "type_name": "热门"},
+        {"type_id": "20", "type_name": "推荐"},
+        {"type_id": "21", "type_name": "国产"},
+        {"type_id": "22", "type_name": "主播"},
         {"type_id": "24", "type_name": "24日无码"},
         {"type_id": "27", "type_name": "27性感"},
         {"type_id": "28", "type_name": "28乱"},
         {"type_id": "29", "type_name": "29欧美"},
-        {"type_id": "29", "type_name": "31三级"},
-        {"type_id": "29", "type_name": "32卡通"},
-        {"type_id": "29", "type_name": "33"},
-        {"type_id": "29", "type_name": "35"}
+        {"type_id": "31", "type_name": "31三级"},
+        {"type_id": "32", "type_name": "32卡通"},
+        {"type_id": "33", "type_name": "33丝袜"},
+        {"type_id": "35", "type_name": "35自拍偷拍"},
+        {"type_id": "36", "type_name": "36日本"},
+        {"type_id": "44", "type_name": "44剧情介绍"},
+        {"type_id": "56", "type_name": "56网爆"},
+        {"type_id": "57", "type_name": "57麻豆"},
+        {"type_id": "60", "type_name": "60明星换脸"},
+        {"type_id": "61", "type_name": "61乱"},
+        {"type_id": "62", "type_name": "62国丝"},
+        {"type_id": "64", "type_name": "64人妻"},
+        {"type_id": "65", "type_name": "65探花"},
+        {"type_id": "66", "type_name": "66同性恋"},
+        {"type_id": "29", "type_name": "35自拍偷拍"},
+        {"type_id": "29", "type_name": "35自拍偷拍"}
                             ],
                  }
         return result
@@ -67,6 +80,8 @@ class Spider(Spider):
         arr=data["list"]
         for item in arr:
             vod_id = item["vod_play_url"]
+            if any(word in item["vod_name"] for word in ban_list):
+                continue
             videos.append({
                 "vod_id": vod_id,
                 "vod_name": item["vod_name"],
