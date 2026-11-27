@@ -18,7 +18,7 @@
 {"key": "DSYS","name": "DSYS","type": 3,"api": "./py/DSYS.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "fullhd","name": "fullhd9999","type": 3,"api": "./py/fullhd.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "XJ","name": "XJ","type": 3,"api": "./py/XJ.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
-    {"key": "Xzy","name": "Xzy3333","type": 3,"api": "./py/X资源.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
+    {"key": "Xzy","name": "Xzy44","type": 3,"api": "./py/X资源.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "stripchat","name": "stripchat","type": 3,"api": "./py/stripchat.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "vf","name": "vf","type": 3,"api": "./py/vf.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
 {"key": "xhamster","name": "xhamster","type": 3,"api": "./py/xhamster.py","searchable": 1,"changeable": 1,"quickSearch": 1,"filterable": 1},
