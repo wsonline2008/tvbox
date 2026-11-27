@@ -67,7 +67,7 @@ class Spider(Spider):
                 "vod_id": vod_id,
                 "vod_name": item["vod_name"],
                 "vod_pic": item["vod_pic"],
-                "vod_remarks": item["vod_time"]
+                "vod_remarks": item["vod_id"]
             })
         '''videos.append({
             "vod_id": "https://video17.balecao.com/video/20220227/e0f64dfe84cbfe8c1367dfba2c689afd/index.m3u8",
