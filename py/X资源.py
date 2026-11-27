@@ -38,13 +38,13 @@ class Spider(Spider):
     def homeContent(self, filter):
         result = {}
         result = {"class": [
-        {"type_id": "latest-updates", "type_name": "最新"},
-        {"type_id": "top-rated", "type_name": "最佳"},
-        {"type_id": "most-popular", "type_name": "热门"},
-        {"type_id": "networks/brazzers-com", "type_name": "Brazzers"},
-        {"type_id": "networks/tushy-com", "type_name": "Tushy"},
-        {"type_id": "networks/naughtyamerica-com", "type_name": "Naughtyamerica"},
-        {"type_id": "categories/pantyhose", "type_name": "Pantyhose"}
+        {"type_id": "20", "type_name": "最新"},
+        {"type_id": "21", "type_name": "最佳"},
+        {"type_id": "22", "type_name": "热门"},
+        {"type_id": "23", "type_name": "Brazzers"},
+        {"type_id": "24", "type_name": "Tushy"},
+        {"type_id": "25", "type_name": "Naughtyamerica"},
+        {"type_id": "26", "type_name": "Pantyhose"}
                             ],
                  }
         return result
@@ -54,7 +54,7 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         tag = tid
-        urlstr=f'?pg={pg}' if int(pg)>1 else ''
+        urlstr=f'?pg={pg}&t={tag}' if int(pg)>1 else '?t={tag}'
         data = self.getjson(self.host+'/api/json.php'+urlstr)
         videos = []
         pagecount=data["pagecount"]
