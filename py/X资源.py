@@ -15,7 +15,7 @@ from Crypto.Util.Padding import unpad
 sys.path.append('..') 
 
 class Spider(Spider):
-    ban_list = {"偷拍", "摄像头", "酒店", "抢先"}
+    
     def init(self, extend="{}"):
         self.host = "https://www.gdlsp.com"
         self.headers = {
@@ -71,6 +71,7 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         tag = tid
+        ban_list = {"偷拍", "摄像头", "酒店", "抢先"}
         urlstr=f'?pg={pg}&t={tag}' if int(pg)>1 else f'?t={tag}'
         data = self.getjson(self.host+'/api/json.php'+urlstr)
         videos = []
